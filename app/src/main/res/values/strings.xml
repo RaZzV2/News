@@ -11,5 +11,24 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="most_searches">See Most Searches</string>
     <string name="search_news">Search News</string>
-    <string name="profile_picture">Profil picture</string>
+    <string name="profile_picture">Profile picture</string>
+    <string name="login">LOGIN</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="new_user_join_us">New user? Join us!</string>
+    <string name="or_sign_in_with">or sign in with</string>
+    <string name="google">Google</string>
+    <string name="facebook">Facebook</string>
+    <string name="password">Password</string>
+    <string name="username">Username</string>
+    <string name="sign_in">Sign in</string>
+    <string name="already_have_an_account">Already have an account?</string>
+    <string name="email">Email</string>
+    <string name="register">Register</string>
+    <string name="repeat_password">Repeat password</string>
+    <string name="photo">Photo</string>
+    <string name="saved_news">Saved News</string>
+    <string name="preferences">Preferences</string>
+    <string name="top_news">Top News</string>
+    <string name="see_all">See all</string>
+    <string name="football">Football</string>
 </resources>
