@@ -27,7 +27,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:textStyle="bold"
-                    android:background="@drawable/text_style"
+                    android:textColor="#FFFFFF"
                     android:text="@string/search_by_image"
                     android:textSize="40sp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -64,7 +64,7 @@
                     android:layout_height="50dp"
                     android:layout_gravity="center"
                     android:textColor="#ffffff"
-                    android:text="Search"
+                    android:text="@string/search"
                     android:background="@drawable/button_curve"/>
             </LinearLayout>
         </LinearLayout>
