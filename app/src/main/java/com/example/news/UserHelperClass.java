@@ -3,10 +3,9 @@ package com.example.news;
 public class UserHelperClass {
     String email, username, password, phone_number;
 
-    public UserHelperClass(String email, String username, String password, String phone_number) {
+    public UserHelperClass(String email, String username, String phone_number) {
         this.email = email;
         this.username = username;
-        this.password = password;
         this.phone_number=phone_number;
     }
 
