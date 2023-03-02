@@ -13,6 +13,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Objects;
+
 public class RegisterActivity extends AppCompatActivity {
     EditText email, username, password, repeat_password, phone_number;
     Button registerButton;
@@ -60,7 +62,9 @@ public class RegisterActivity extends AppCompatActivity {
                 firebaseAuth.createUserWithEmailAndPassword(emailContent, passwordContent)
                         .addOnCompleteListener(RegisterActivity.this, task -> {
                             if(task.isSuccessful()){
-                                databaseReferenceUsers.setValue(userHelperClass);
+                                String userId = Objects.requireNonNull(task.getResult().getUser()).getUid();
+                                DatabaseReference newUserRef = databaseReferenceUsers.child(userId);
+                                newUserRef.setValue(userHelperClass);
                                 Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
                                 startActivity(intent);
                             }
