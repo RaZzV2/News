@@ -25,16 +25,6 @@ public class RegisterActivity extends AppCompatActivity {
 
     DatabaseReference databaseReferenceUsers;
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-        if(currentUser != null){
-            Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-            startActivity(intent);
-            finish();
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,22 +42,11 @@ public class RegisterActivity extends AppCompatActivity {
         registerButton.setOnClickListener(v -> {
             final String emailContent = email.getText().toString();
             final String usernameContent = username.getText().toString();
-            final String phoneNumberContent = phone_number.getText().toString();
             final String passwordContent = password.getText().toString();
 
-            final UserHelperClass userHelperClass = new UserHelperClass(emailContent, usernameContent, phoneNumberContent);
+            final UserHelperClass userHelperClass = new UserHelperClass(emailContent, usernameContent, passwordContent);
 
 
-            firebaseAuth.createUserWithEmailAndPassword(emailContent, passwordContent)
-                    .addOnCompleteListener(RegisterActivity.this, task -> {
-                        if(task.isSuccessful()){
-                            String userId = Objects.requireNonNull(task.getResult().getUser()).getUid();
-                            DatabaseReference newUserRef = databaseReferenceUsers.child(userId);
-                            newUserRef.setValue(userHelperClass);
-                            Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-                            startActivity(intent);
-                        }
-                    });
         });
 
 
