@@ -1,12 +1,11 @@
 package com.example.news;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -16,7 +15,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.Objects;
 
 public class RegisterActivity extends AppCompatActivity {
-    EditText email, username, password, repeat_password, phone_number;
+    EditText email;
+    EditText username;
+    EditText password;
+    EditText phone_number;
     Button registerButton;
 
     FirebaseAuth firebaseAuth;
@@ -47,29 +49,25 @@ public class RegisterActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReferenceUsers = FirebaseDatabase.getInstance().getReference().child("users");
 
-        registerButton.setOnClickListener(new View.OnClickListener() {
+        registerButton.setOnClickListener(v -> {
+            final String emailContent = email.getText().toString();
+            final String usernameContent = username.getText().toString();
+            final String phoneNumberContent = phone_number.getText().toString();
+            final String passwordContent = password.getText().toString();
 
-            @Override
-            public void onClick(View v) {
-                final String emailContent = email.getText().toString();
-                final String usernameContent = username.getText().toString();
-                final String phoneNumberContent = phone_number.getText().toString();
-                final String passwordContent = password.getText().toString();
-
-                final UserHelperClass userHelperClass = new UserHelperClass(emailContent, usernameContent, phoneNumberContent);
+            final UserHelperClass userHelperClass = new UserHelperClass(emailContent, usernameContent, phoneNumberContent);
 
 
-                firebaseAuth.createUserWithEmailAndPassword(emailContent, passwordContent)
-                        .addOnCompleteListener(RegisterActivity.this, task -> {
-                            if(task.isSuccessful()){
-                                String userId = Objects.requireNonNull(task.getResult().getUser()).getUid();
-                                DatabaseReference newUserRef = databaseReferenceUsers.child(userId);
-                                newUserRef.setValue(userHelperClass);
-                                Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-                                startActivity(intent);
-                            }
-                        });
-            }
+            firebaseAuth.createUserWithEmailAndPassword(emailContent, passwordContent)
+                    .addOnCompleteListener(RegisterActivity.this, task -> {
+                        if(task.isSuccessful()){
+                            String userId = Objects.requireNonNull(task.getResult().getUser()).getUid();
+                            DatabaseReference newUserRef = databaseReferenceUsers.child(userId);
+                            newUserRef.setValue(userHelperClass);
+                            Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                            startActivity(intent);
+                        }
+                    });
         });
 
 
