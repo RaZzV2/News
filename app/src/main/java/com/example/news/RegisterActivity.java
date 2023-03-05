@@ -5,10 +5,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -39,18 +36,14 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     public void createAccountIfMailUnique(String emailContent, String passwordContent, String usernameContent, String phoneNumberContent){
-        boolean emailExists = false;
 
         EmailVerification emailVerification = new EmailVerification();
-        emailVerification.checkEmailExists(emailContent).addOnSuccessListener(new OnSuccessListener<Boolean>() {
-            @Override
-            public void onSuccess(Boolean emailExists) {
-                if(emailExists){
-                    Toast.makeText(RegisterActivity.this, "This email is already in use!", Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    createAccount(emailContent, passwordContent, usernameContent, phoneNumberContent);
-                }
+        emailVerification.checkEmailExists(emailContent).addOnSuccessListener(emailExists -> {
+            if(emailExists){
+                Toast.makeText(RegisterActivity.this, "This email is already in use!", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                createAccount(emailContent, passwordContent, usernameContent, phoneNumberContent);
             }
         });
     }
@@ -70,6 +63,30 @@ public class RegisterActivity extends AppCompatActivity {
                         Toast.makeText(RegisterActivity.this, "Registration failed!", Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+    public void checkValidatorsAndCreateAccount(String emailContent, String passwordContent, String usernameContent, String  phoneNumberContent){
+        Validator validator = new Validator();
+
+        if (!validator.isValidEmail(emailContent)) {
+            Toast.makeText(this, "This email is invalid", Toast.LENGTH_SHORT).show();
+        }
+
+        else if (!validator.isValidUsername(usernameContent)) {
+            Toast.makeText(this, "This username is invalid", Toast.LENGTH_SHORT).show();
+            username.setError("The username:\n" +
+                    "- It must start with a letter\n" +
+                    "- It must have between 4 and 20 characters\n" +
+                    "- Can also contain numbers");
+        }
+        else if (!validator.isValidPassword(passwordContent)) {
+            Toast.makeText(this, "This password is invalid", Toast.LENGTH_SHORT).show();
+            password.setError("The password\n" +
+                    "- Must have at least 8 characters\n" +
+                    "- Must contain at least one symbol\n" +
+                    "- Must have at least one capital letter\n" +
+                    "- Must contain at least one number");
+        }
+        else createAccountIfMailUnique(emailContent, passwordContent, usernameContent, phoneNumberContent);
     }
 
     @Override
@@ -91,29 +108,7 @@ public class RegisterActivity extends AppCompatActivity {
             final String phoneNumberContent = phone_number.getText().toString();
             final String passwordContent = password.getText().toString();
 
-           Validator validator = new Validator();
-
-
-            if (!validator.isValidEmail(emailContent)) {
-                Toast.makeText(this, "This email is invalid", Toast.LENGTH_SHORT).show();
-            }
-
-            else if (!validator.isValidUsername(usernameContent)) {
-                Toast.makeText(this, "This username is invalid", Toast.LENGTH_SHORT).show();
-                username.setError("The username:\n" +
-                        "- It must start with a letter\n" +
-                        "- It must have between 4 and 20 characters\n" +
-                        "- Can also contain numbers");
-            }
-            else if (!validator.isValidPassword(passwordContent)) {
-                Toast.makeText(this, "This password is invalid", Toast.LENGTH_SHORT).show();
-                password.setError("The password\n" +
-                        "- Must have at least 8 characters\n" +
-                        "- Must contain at least one symbol\n" +
-                        "- Must have at least one capital letter\n" +
-                        "- Must contain at least one number");
-            }
-            else createAccountIfMailUnique(emailContent, passwordContent, usernameContent, phoneNumberContent);
+            checkValidatorsAndCreateAccount(emailContent,passwordContent, usernameContent,phoneNumberContent);
         });
 
 
