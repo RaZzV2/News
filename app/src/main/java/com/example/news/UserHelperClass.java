@@ -2,11 +2,30 @@ package com.example.news;
 
 public class UserHelperClass {
     String email, username, password, phone_number;
+    boolean isConfirmedPhone, isConfirmedEmail;
 
-    public UserHelperClass(String email, String username, String phone_number) {
+    public UserHelperClass(String email, String username, String phone_number, boolean isConfirmedPhone, boolean isConfirmedEmail) {
         this.email = email;
         this.username = username;
-        this.phone_number=phone_number;
+        this.phone_number = phone_number;
+        this.isConfirmedPhone = isConfirmedPhone;
+        this.isConfirmedEmail = isConfirmedEmail;
+    }
+
+    public boolean isConfirmedPhone() {
+        return isConfirmedPhone;
+    }
+
+    public void setConfirmedPhone(boolean confirmedPhone) {
+        isConfirmedPhone = confirmedPhone;
+    }
+
+    public boolean isConfirmedEmail() {
+        return isConfirmedEmail;
+    }
+
+    public void setConfirmedEmail(boolean confirmedEmail) {
+        isConfirmedEmail = confirmedEmail;
     }
 
     public UserHelperClass() {

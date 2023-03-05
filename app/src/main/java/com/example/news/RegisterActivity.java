@@ -14,6 +14,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.Objects;
 
 public class RegisterActivity extends AppCompatActivity {
+
+    AuthManager authManager;
     EditText email;
     EditText username;
     EditText password;
@@ -49,20 +51,20 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     public void createAccount(String emailContent, String passwordContent, String usernameContent, String  phoneNumberContent){
-        final UserHelperClass userHelperClass = new UserHelperClass(emailContent, usernameContent, phoneNumberContent);
-        firebaseAuth.createUserWithEmailAndPassword(emailContent, passwordContent)
-                .addOnCompleteListener(RegisterActivity.this, task -> {
-                    if(task.isSuccessful()){
-                        String userId = Objects.requireNonNull(task.getResult().getUser()).getUid();
-                        DatabaseReference newUserRef = databaseReferenceUsers.child(userId);
-                        newUserRef.setValue(userHelperClass);
-                        Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-                        startActivity(intent);
-                    }
-                    else {
-                        Toast.makeText(RegisterActivity.this, "Registration failed!", Toast.LENGTH_SHORT).show();
-                    }
-                });
+        final UserHelperClass userHelperClass = new UserHelperClass(emailContent, usernameContent, phoneNumberContent, false, false);
+        authManager = new AuthManager();
+        authManager.register(emailContent, passwordContent, task -> {
+            if(task.isSuccessful()){
+                String userId = Objects.requireNonNull(task.getResult().getUser()).getUid();
+                DatabaseReference newUserRef = databaseReferenceUsers.child(userId);
+                newUserRef.setValue(userHelperClass);
+                Intent intent = new Intent(getApplicationContext(), SendOTP.class);
+                startActivity(intent);
+            }
+            else {
+                Toast.makeText(RegisterActivity.this, "Registration failed!", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
     public void checkValidatorsAndCreateAccount(String emailContent, String passwordContent, String usernameContent, String  phoneNumberContent){
         Validator validator = new Validator();
