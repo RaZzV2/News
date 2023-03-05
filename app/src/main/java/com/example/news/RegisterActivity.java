@@ -8,8 +8,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Objects;
 
@@ -24,7 +22,6 @@ public class RegisterActivity extends AppCompatActivity {
 
     FirebaseAuth firebaseAuth;
 
-    DatabaseReference databaseReferenceUsers;
     @Override
     public void onStart() {
         super.onStart();
@@ -56,8 +53,7 @@ public class RegisterActivity extends AppCompatActivity {
         authManager.register(emailContent, passwordContent, task -> {
             if(task.isSuccessful()){
                 String userId = Objects.requireNonNull(task.getResult().getUser()).getUid();
-                DatabaseReference newUserRef = databaseReferenceUsers.child(userId);
-                newUserRef.setValue(userHelperClass);
+                authManager.registerToRealtimeDatabase(userHelperClass, userId);
                 Intent intent = new Intent(getApplicationContext(), SendOTP.class);
                 startActivity(intent);
             }
@@ -96,13 +92,13 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_activity);
 
+        authManager = new AuthManager();
         email = findViewById(R.id.email);
         username = findViewById(R.id.username);
         password = findViewById(R.id.password);
         registerButton = findViewById(R.id.register_button);
         phone_number = findViewById(R.id.phone_number);
         firebaseAuth = FirebaseAuth.getInstance();
-        databaseReferenceUsers = FirebaseDatabase.getInstance().getReference().child("users");
 
         registerButton.setOnClickListener(v -> {
             final String emailContent = email.getText().toString();

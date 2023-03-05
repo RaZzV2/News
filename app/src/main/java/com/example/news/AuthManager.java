@@ -8,14 +8,24 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class AuthManager {
-    private static FirebaseAuth firebaseAuth;
-    private static FirebaseUser firebaseUser;
+    private final FirebaseAuth firebaseAuth;
+    private final FirebaseUser firebaseUser;
+
+    public FirebaseAuth getFirebaseAuth() {
+        return firebaseAuth;
+    }
+    public FirebaseUser getFirebaseUser() {
+        return firebaseUser;
+    }
 
     public AuthManager() {
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
     }
 
+    public String getCurrentUserUid (){
+        return firebaseUser.getUid();
+    }
     public FirebaseUser getCurrentUser() {
         return firebaseUser;
     }
@@ -34,8 +44,15 @@ public class AuthManager {
                 .addOnCompleteListener(listener);
     }
 
-    public DatabaseReference usersReference(){
+    public void registerToRealtimeDatabase(UserHelperClass userHelperClass, String userId){
+        getUsersReference().child(userId).setValue(userHelperClass);
+    }
+
+    public DatabaseReference getUsersReference(){
         return FirebaseDatabase.getInstance().getReference().child("users");
     }
 
+    public DatabaseReference getCurrentUserReference(){
+        return getUsersReference().child(getCurrentUserUid());
+    }
 }
