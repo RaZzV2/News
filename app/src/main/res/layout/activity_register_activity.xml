@@ -128,7 +128,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/others"
         android:layout_above="@id/social_icons"
-        android:text="@string/or_sign_in_with"
+        android:text="@string/or_sign_up_with"
         android:layout_centerHorizontal="true"/>
 
 

@@ -9,6 +9,9 @@ public class UserHelperClass {
         this.phone_number=phone_number;
     }
 
+    public UserHelperClass() {
+    }
+
     public String getPhone_number() {
         return phone_number;
     }
