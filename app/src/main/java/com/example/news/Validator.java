@@ -17,4 +17,9 @@ public class Validator {
         String pattern = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$";
         return password.matches(pattern);
     }
+
+    public boolean isValidPhoneNumber(String phoneNumber){
+        String pattern = "^\\+40[1-9]\\d{8}$";
+        return phoneNumber.matches(pattern);
+    }
 }

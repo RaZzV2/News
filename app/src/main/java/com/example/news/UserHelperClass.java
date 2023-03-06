@@ -1,13 +1,12 @@
 package com.example.news;
 
 public class UserHelperClass {
-    String email, username, password, phone_number;
+    String email, username, password;
     boolean isConfirmedPhone, isConfirmedEmail;
 
-    public UserHelperClass(String email, String username, String phone_number, boolean isConfirmedPhone, boolean isConfirmedEmail) {
+    public UserHelperClass(String email, String username, boolean isConfirmedPhone, boolean isConfirmedEmail) {
         this.email = email;
         this.username = username;
-        this.phone_number = phone_number;
         this.isConfirmedPhone = isConfirmedPhone;
         this.isConfirmedEmail = isConfirmedEmail;
     }
@@ -29,14 +28,6 @@ public class UserHelperClass {
     }
 
     public UserHelperClass() {
-    }
-
-    public String getPhone_number() {
-        return phone_number;
-    }
-
-    public void setPhone_number(String phone_number) {
-        this.phone_number = phone_number;
     }
 
     public String getEmail() {

@@ -22,7 +22,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     FirebaseAuth firebaseAuth;
 
-    @Override
+    /*@Override
     public void onStart() {
         super.onStart();
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
@@ -31,7 +31,7 @@ public class RegisterActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
-    }
+    }*/
 
 
     public void createAccountIfMailUnique(String emailContent, String passwordContent, String usernameContent, String phoneNumberContent){
@@ -42,13 +42,13 @@ public class RegisterActivity extends AppCompatActivity {
                 Toast.makeText(RegisterActivity.this, "This email is already in use!", Toast.LENGTH_SHORT).show();
             }
             else {
-                createAccount(emailContent, passwordContent, usernameContent, phoneNumberContent);
+                createAccount(emailContent, passwordContent, usernameContent);
             }
         });
     }
 
-    public void createAccount(String emailContent, String passwordContent, String usernameContent, String  phoneNumberContent){
-        final UserHelperClass userHelperClass = new UserHelperClass(emailContent, usernameContent, phoneNumberContent, false, false);
+    public void createAccount(String emailContent, String passwordContent, String usernameContent){
+        final UserHelperClass userHelperClass = new UserHelperClass(emailContent, usernameContent, false, false);
         authManager = new AuthManager();
         authManager.register(emailContent, passwordContent, task -> {
             if(task.isSuccessful()){
@@ -98,7 +98,6 @@ public class RegisterActivity extends AppCompatActivity {
         password = findViewById(R.id.password);
         registerButton = findViewById(R.id.register_button);
         phone_number = findViewById(R.id.phone_number);
-        firebaseAuth = FirebaseAuth.getInstance();
 
         registerButton.setOnClickListener(v -> {
             final String emailContent = email.getText().toString();
