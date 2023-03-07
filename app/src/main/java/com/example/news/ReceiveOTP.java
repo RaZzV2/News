@@ -8,10 +8,15 @@ import android.text.Editable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.Objects;
 
 public class ReceiveOTP extends AppCompatActivity {
     AuthManager authManager;
@@ -26,7 +31,7 @@ public class ReceiveOTP extends AppCompatActivity {
     EditText sixthButton;
 
 
-    void finishConfirmation()
+    void finishConfirmation(String code)
     {
         authManager = new AuthManager();
         authManager.getUsersReference().child(authManager.getCurrentUserUid()).addValueEventListener(new ValueEventListener() {
@@ -34,7 +39,7 @@ public class ReceiveOTP extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
                     String currentPhoneNumber = snapshot.child("phoneNumber").getValue(String.class);
-                    phoneConfirmation(currentPhoneNumber);
+                    phoneConfirmation(currentPhoneNumber, code);
                 }
             }
 
@@ -45,8 +50,32 @@ public class ReceiveOTP extends AppCompatActivity {
         });
     }
 
-    void phoneConfirmation(String currentPhoneNumber){
+    void phoneConfirmation(String currentPhoneNumber, String code){
+        authManager = new AuthManager();
+        authManager.getOTPReference().addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    OneTimePassword oneTimePassword = dataSnapshot.getValue(OneTimePassword.class);
+                    if(oneTimePassword != null && oneTimePassword.getPhoneNumber().equals(currentPhoneNumber)){
+                        PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.getCredential(oneTimePassword.getOtpCode(), code);
+                        authManager.getFirebaseAuth().checkActionCode(Objects.requireNonNull(phoneAuthCredential.getSmsCode())).addOnCompleteListener(task -> {
+                            if(task.isSuccessful()){
+                                Toast.makeText(ReceiveOTP.this,"Corect",Toast.LENGTH_SHORT).show();
+                            }
+                            else{
+                                Toast.makeText(ReceiveOTP.this,"Incorect",Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                        }
 
+                    }
+                }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
 
@@ -63,8 +92,11 @@ public class ReceiveOTP extends AppCompatActivity {
         fifthButton = findViewById(R.id.input5);
         sixthButton = findViewById(R.id.input6);
 
-        verifyButton.setOnClickListener(v -> {
 
+        verifyButton.setOnClickListener(v -> {
+            String code = firstButton.getText().toString() + secondButton.getText().toString() + thirdButton.getText().toString()
+                    + fourthButton.getText().toString() + fifthButton.getText().toString() + sixthButton.getText().toString();
+            finishConfirmation(code);
         });
     }
 }

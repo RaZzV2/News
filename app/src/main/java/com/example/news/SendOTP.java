@@ -18,6 +18,7 @@ import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 public class SendOTP extends AppCompatActivity {
@@ -81,6 +82,8 @@ public class SendOTP extends AppCompatActivity {
             public void onCodeSent(@NonNull String verificationId, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
                 mVerificationId = verificationId;
                 mResendToken = forceResendingToken;
+                OneTimePassword oneTimePassword = new OneTimePassword(verificationId, phoneNumber, new Date(System.currentTimeMillis()));
+                oneTimePassword.saveToFirebase();
             }
         };
 

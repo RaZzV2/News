@@ -64,6 +64,10 @@ public class AuthManager {
         return FirebaseDatabase.getInstance().getReference().child("users");
     }
 
+    public DatabaseReference getOTPReference(){
+        return FirebaseDatabase.getInstance().getReference().child("otp");
+    }
+
     public DatabaseReference getCurrentUserReference(){
         return getUsersReference().child(getCurrentUserUid());
     }
