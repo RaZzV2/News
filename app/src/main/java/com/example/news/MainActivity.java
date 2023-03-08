@@ -31,9 +31,15 @@ public class MainActivity extends AppCompatActivity {
         authManager = new AuthManager();
         FirebaseUser currentUser = authManager.getCurrentUser();
         if(currentUser != null){
-            Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-            startActivity(intent);
-            finish();
+            if(!currentUser.isEmailVerified())
+            {
+                Toast.makeText(this,"Your email is not verified!",Toast.LENGTH_SHORT).show();
+            }
+            else {
+                Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                startActivity(intent);
+                finish();
+            }
         }
     }
 

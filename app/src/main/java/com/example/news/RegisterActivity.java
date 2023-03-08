@@ -8,6 +8,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.PhoneAuthProvider;
 
 import java.util.Objects;
 
@@ -52,10 +53,21 @@ public class RegisterActivity extends AppCompatActivity {
         authManager = new AuthManager();
         authManager.register(emailContent, passwordContent, task -> {
             if(task.isSuccessful()){
-                String userId = Objects.requireNonNull(task.getResult().getUser()).getUid();
-                authManager.registerToRealtimeDatabase(userHelperClass, userId);
-                Intent intent = new Intent(getApplicationContext(), SendOTP.class);
-                startActivity(intent);
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                if(user != null){
+                user.sendEmailVerification().addOnCompleteListener(secondTask -> {
+                    if (secondTask.isSuccessful()) {
+                        String userId = Objects.requireNonNull(task.getResult().getUser()).getUid();
+                        authManager.registerToRealtimeDatabase(userHelperClass, userId);
+                        Intent intent = new Intent(getApplicationContext(), SendOTP.class);
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(RegisterActivity.this, "Error!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+
+                }
             }
             else {
                 Toast.makeText(RegisterActivity.this, "Registration failed!", Toast.LENGTH_SHORT).show();

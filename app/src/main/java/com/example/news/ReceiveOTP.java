@@ -1,22 +1,26 @@
 package com.example.news;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
-import android.text.Editable;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseException;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 public class ReceiveOTP extends AppCompatActivity {
     AuthManager authManager;
@@ -34,12 +38,30 @@ public class ReceiveOTP extends AppCompatActivity {
     void finishConfirmation(String code)
     {
         authManager = new AuthManager();
-        authManager.getUsersReference().child(authManager.getCurrentUserUid()).addValueEventListener(new ValueEventListener() {
+        authManager.getOTPReference().addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()){
-                    String currentPhoneNumber = snapshot.child("phoneNumber").getValue(String.class);
-                    phoneConfirmation(currentPhoneNumber, code);
+                for(DataSnapshot snapshot1 : snapshot.getChildren()) {
+                    if (snapshot1.exists()) {
+
+                        String[] currentUserPhone = new String[1];
+                        authManager.getUsersReference().child(authManager.getCurrentUserUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshotAux) {
+                                currentUserPhone[0] = snapshotAux.child("phoneNumber").getValue(String.class);
+                                String currentPhoneNumber = snapshot1.child("phoneNumber").getValue(String.class);
+                                String currentOTP = snapshot1.child("otpCode").getValue(String.class);
+                                assert currentPhoneNumber != null;
+                                if(currentPhoneNumber.equals(currentUserPhone[0])) {
+                                    phoneConfirmation(currentOTP, code);
+                                }
+                            }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                    }
                 }
             }
 
@@ -51,29 +73,16 @@ public class ReceiveOTP extends AppCompatActivity {
     }
 
     void phoneConfirmation(String currentPhoneNumber, String code){
-        authManager = new AuthManager();
-        authManager.getOTPReference().addValueEventListener(new ValueEventListener() {
+        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(currentPhoneNumber, code);
+        authManager.getCurrentUser().linkWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
-                    OneTimePassword oneTimePassword = dataSnapshot.getValue(OneTimePassword.class);
-                    if(oneTimePassword != null && oneTimePassword.getPhoneNumber().equals(currentPhoneNumber)){
-                        PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.getCredential(oneTimePassword.getOtpCode(), code);
-                        authManager.getFirebaseAuth().checkActionCode(Objects.requireNonNull(phoneAuthCredential.getSmsCode())).addOnCompleteListener(task -> {
-                            if(task.isSuccessful()){
-                                Toast.makeText(ReceiveOTP.this,"Corect",Toast.LENGTH_SHORT).show();
-                            }
-                            else{
-                                Toast.makeText(ReceiveOTP.this,"Incorect",Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                        }
-
-                    }
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if(task.isSuccessful()){
+                    Toast.makeText(ReceiveOTP.this, "Succes", Toast.LENGTH_SHORT).show();
                 }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
+                else{
+                    Toast.makeText(ReceiveOTP.this, "Failed", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
