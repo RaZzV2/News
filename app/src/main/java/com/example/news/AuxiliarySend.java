@@ -42,13 +42,7 @@ public class AuxiliarySend extends AsyncTask<String, Void, String> {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        String x;
         assert response.body() != null;
-        try {
-             x = response.body().string();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
         return null;
     }
 }

@@ -30,18 +30,34 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         authManager = new AuthManager();
         FirebaseUser currentUser = authManager.getCurrentUser();
-        if(currentUser != null){
-            if(!currentUser.isEmailVerified())
-            {
-                Toast.makeText(this,"Your email is not verified!",Toast.LENGTH_SHORT).show();
-            }
-            else {
-                Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-                startActivity(intent);
-                finish();
-            }
+        if(currentUser != null) {
+            onStartVerification();
         }
     }
+
+        public void onStartVerification(){
+            authManager.getCurrentUserConfirmedPhoneReference().addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        if (!authManager.getCurrentUser().isEmailVerified() || (Boolean.FALSE.equals(snapshot.getValue(Boolean.class)))) {
+                            authManager.logOut();
+                        }
+                        else {
+                            Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+
+
 
     public void authenticate(String emailContent, String passwordContent){
         authManager = new AuthManager();
@@ -56,6 +72,28 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+    public void verifyAuthenticate(DataSnapshot snapshot){
+
+        if (snapshot.hasChild("confirmedPhone") && snapshot.child("confirmedPhone").getValue() != null) {
+            boolean numberConfirmationColumnValue = Boolean.TRUE.equals(snapshot.child("confirmedPhone").getValue(Boolean.class));
+            Intent intent;
+            if(!numberConfirmationColumnValue){
+                intent = new Intent(MainActivity.this, SendOTP.class);
+            }
+            else if(!authManager.getCurrentUser().isEmailVerified()){
+                Toast.makeText(MainActivity.this, "Email is not verified!",Toast.LENGTH_SHORT).show();
+                intent = new Intent(MainActivity.this, MainActivity.class);
+            }
+            else {
+                intent = new Intent(MainActivity.this, HomeActivity.class);
+            }
+            startActivity(intent);
+            finish();
+        }
+    }
+
+
     public void secureAuthenticate(){
         authManager = new AuthManager();
         FirebaseUser currentUser = authManager.getCurrentUser();
@@ -64,26 +102,7 @@ public class MainActivity extends AppCompatActivity {
             currentUserDatabase.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                    if (snapshot.hasChild("confirmedPhone") && snapshot.child("confirmedPhone").getValue() != null) {
-                        boolean numberConfirmationColumnValue = Boolean.TRUE.equals(snapshot.child("confirmedPhone").getValue(Boolean.class));
-                        boolean emailConfirmationColumnValue = Boolean.TRUE.equals(snapshot.child("confirmedEmail").getValue(Boolean.class));
-
-                        if(!numberConfirmationColumnValue){
-                            Intent intent = new Intent(MainActivity.this, SendOTP.class);
-                            startActivity(intent);
-                            finish();
-                        }
-                        else if(!emailConfirmationColumnValue){
-                            Toast.makeText(MainActivity.this, "Email has not been verified!", Toast.LENGTH_SHORT).show();
-                        }
-                        else {
-                            Intent intent = new Intent(MainActivity.this, HomeActivity.class);
-                            startActivity(intent);
-                            finish();
-                        }
-                    }
-
+                    verifyAuthenticate(snapshot);
                 }
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
@@ -92,7 +111,6 @@ public class MainActivity extends AppCompatActivity {
             });
         }
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,7 +132,13 @@ public class MainActivity extends AppCompatActivity {
         loginButton.setOnClickListener(v -> {
             String emailContent = email.getText().toString();
             String passwordContent = password.getText().toString();
-            authenticate(emailContent,passwordContent);
+            if(!emailContent.isEmpty() && !passwordContent.isEmpty()) {
+                authenticate(emailContent, passwordContent);
+            }
+            else
+            {
+                Toast.makeText(this, "Fields can't be empty!", Toast.LENGTH_SHORT).show();
+            }
         });
 
     }

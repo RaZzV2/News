@@ -22,18 +22,6 @@ public class RegisterActivity extends AppCompatActivity {
     EditText phone_number;
     Button registerButton;
 
-    /*@Override
-    public void onStart() {
-        super.onStart();
-        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-        if(currentUser != null){
-            Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-            startActivity(intent);
-            finish();
-        }
-    }*/
-
-
     public void createAccountIfMailUnique(String emailContent, String passwordContent, String usernameContent){
 
         EmailVerification emailVerification = new EmailVerification();
