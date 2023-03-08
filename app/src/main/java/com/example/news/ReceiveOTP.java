@@ -8,19 +8,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseException;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.PhoneAuthCredential;
-import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
-
-import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 public class ReceiveOTP extends AppCompatActivity {
     AuthManager authManager;
@@ -38,51 +30,31 @@ public class ReceiveOTP extends AppCompatActivity {
     void finishConfirmation(String code)
     {
         authManager = new AuthManager();
-        authManager.getOTPReference().addValueEventListener(new ValueEventListener() {
+        authManager.getUsersReference().child(authManager.getCurrentUserUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot snapshot1 : snapshot.getChildren()) {
-                    if (snapshot1.exists()) {
-
-                        String[] currentUserPhone = new String[1];
-                        authManager.getUsersReference().child(authManager.getCurrentUserUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshotAux) {
-                                currentUserPhone[0] = snapshotAux.child("phoneNumber").getValue(String.class);
-                                String currentPhoneNumber = snapshot1.child("phoneNumber").getValue(String.class);
-                                String currentOTP = snapshot1.child("otpCode").getValue(String.class);
-                                assert currentPhoneNumber != null;
-                                if(currentPhoneNumber.equals(currentUserPhone[0])) {
-                                    phoneConfirmation(currentOTP, code);
-                                }
-                            }
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
-                    }
+                if(snapshot.exists()){
+                    String currentOTP = snapshot.child("otpCode").getValue(String.class);
+                    phoneConfirmation(currentOTP, code);
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                //error message;
+
             }
         });
     }
 
-    void phoneConfirmation(String currentPhoneNumber, String code){
-        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(currentPhoneNumber, code);
-        authManager.getCurrentUser().linkWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()){
-                    Toast.makeText(ReceiveOTP.this, "Succes", Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    Toast.makeText(ReceiveOTP.this, "Failed", Toast.LENGTH_SHORT).show();
-                }
+    void phoneConfirmation(String currentOTP, String code){
+        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(currentOTP, code);
+        authManager.getCurrentUser().linkWithCredential(credential).addOnCompleteListener(task -> {
+            if(task.isSuccessful()){
+                Toast.makeText(ReceiveOTP.this, "Phone number has been verified!", Toast.LENGTH_SHORT).show();
+                authManager.getCurrentUserConfirmedPhoneReference().setValue(true);
+            }
+            else{
+                Toast.makeText(ReceiveOTP.this, "The OTP code entered is wrong!", Toast.LENGTH_SHORT).show();
             }
         });
     }

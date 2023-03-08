@@ -5,10 +5,11 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.PhoneAuthProvider;
 
 import java.util.Objects;
 
@@ -20,8 +21,6 @@ public class RegisterActivity extends AppCompatActivity {
     EditText password;
     EditText phone_number;
     Button registerButton;
-
-    FirebaseAuth firebaseAuth;
 
     /*@Override
     public void onStart() {
@@ -35,7 +34,7 @@ public class RegisterActivity extends AppCompatActivity {
     }*/
 
 
-    public void createAccountIfMailUnique(String emailContent, String passwordContent, String usernameContent, String phoneNumberContent){
+    public void createAccountIfMailUnique(String emailContent, String passwordContent, String usernameContent){
 
         EmailVerification emailVerification = new EmailVerification();
         emailVerification.checkEmailExists(emailContent).addOnSuccessListener(emailExists -> {
@@ -74,7 +73,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
     }
-    public void checkValidatorsAndCreateAccount(String emailContent, String passwordContent, String usernameContent, String  phoneNumberContent){
+    public void checkValidatorsAndCreateAccount(String emailContent, String passwordContent, String usernameContent){
         Validator validator = new Validator();
 
         if (!validator.isValidEmail(emailContent)) {
@@ -96,7 +95,7 @@ public class RegisterActivity extends AppCompatActivity {
                     "- Must have at least one capital letter\n" +
                     "- Must contain at least one number");
         }
-        else createAccountIfMailUnique(emailContent, passwordContent, usernameContent, phoneNumberContent);
+        else createAccountIfMailUnique(emailContent, passwordContent, usernameContent);
     }
 
     @Override
@@ -114,10 +113,9 @@ public class RegisterActivity extends AppCompatActivity {
         registerButton.setOnClickListener(v -> {
             final String emailContent = email.getText().toString();
             final String usernameContent = username.getText().toString();
-            final String phoneNumberContent = phone_number.getText().toString();
             final String passwordContent = password.getText().toString();
 
-            checkValidatorsAndCreateAccount(emailContent,passwordContent, usernameContent,phoneNumberContent);
+            checkValidatorsAndCreateAccount(emailContent,passwordContent, usernameContent);
         });
 
 
