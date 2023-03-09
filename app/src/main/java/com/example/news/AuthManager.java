@@ -37,6 +37,8 @@ public class AuthManager {
         firebaseAuth.signOut();
     }
 
+    public void reload() {firebaseUser.reload();}
+
     public void login(String email, String password, OnCompleteListener<AuthResult> listener) {
         firebaseAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(listener);

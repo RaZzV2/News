@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
         authManager = new AuthManager();
         FirebaseUser currentUser = authManager.getCurrentUser();
         if(currentUser != null) {
+            authManager.reload();
             onStartVerification();
         }
     }
@@ -40,14 +41,16 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if (snapshot.exists()) {
-                        if (!authManager.getCurrentUser().isEmailVerified() || (Boolean.FALSE.equals(snapshot.getValue(Boolean.class)))) {
-                            authManager.logOut();
+                        Intent intent;
+                        if (Boolean.FALSE.equals(snapshot.getValue(Boolean.class)))
+                            intent = new Intent(getApplicationContext(), SendOTP.class);
+                        else if (!authManager.getCurrentUser().isEmailVerified() && authManager.getCurrentUser().getEmail() != null) {
+                            intent = new Intent(getApplicationContext(), EmailOpener.class);
                         }
-                        else {
-                            Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-                            startActivity(intent);
-                            finish();
-                        }
+                        else
+                            intent = new Intent(getApplicationContext(), HomeActivity.class);
+                        startActivity(intent);
+                        finish();
                     }
                 }
                 @Override
@@ -56,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
-
 
 
     public void authenticate(String emailContent, String passwordContent){

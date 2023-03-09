@@ -1,5 +1,6 @@
 package com.example.news;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -52,6 +53,9 @@ public class ReceiveOTP extends AppCompatActivity {
             if(task.isSuccessful()){
                 Toast.makeText(ReceiveOTP.this, "Phone number has been verified!", Toast.LENGTH_SHORT).show();
                 authManager.getCurrentUserConfirmedPhoneReference().setValue(true);
+                Intent intent = new Intent(getApplicationContext(), EmailOpener.class);
+                startActivity(intent);
+                finish();
             }
             else{
                 Toast.makeText(ReceiveOTP.this, "The OTP code entered is wrong!", Toast.LENGTH_SHORT).show();

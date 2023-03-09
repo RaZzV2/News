@@ -47,4 +47,8 @@
     <string name="verify">VERIFY</string>
     <string name="did_not_receive_the_otp">Did not receive the OTP?</string>
     <string name="or_sign_up_with">or sign up with</string>
+    <string name="email_verification">Email Verification</string>
+    <string name="email_confirmation">To have full access to the application, you must confirm your email. Press the button below to start the confirmation</string>
+    <string name="verify_email">VERIFY EMAIL</string>
+    <string name="welcomeTitle">\"Welcome \"</string>
 </resources>
