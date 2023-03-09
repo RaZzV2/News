@@ -30,6 +30,21 @@ public class EmailOpener extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        authManager = new AuthManager();
+        FirebaseUser currentUser = authManager.getCurrentUser();
+        authManager.reload();
+        if(currentUser != null){
+            if(currentUser.isEmailVerified()){
+                Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        }
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

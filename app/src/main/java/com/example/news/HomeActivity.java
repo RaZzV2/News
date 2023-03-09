@@ -40,7 +40,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()) {
                     String username = snapshot.getValue(String.class);
-                    welcomeTitle.setText(getString(R.string.welcomeTitle) + username);
+                    welcomeTitle.setText(String.format("Welcome %s", username));
                 }
             }
 
