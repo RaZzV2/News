@@ -77,6 +77,18 @@ public class SendOTP extends AppCompatActivity {
         PhoneAuthProvider.verifyPhoneNumber(options);
     }
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        authManager = new AuthManager();
+        if(authManager.getCurrentUser() == null){
+            Intent intent = new Intent(SendOTP.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

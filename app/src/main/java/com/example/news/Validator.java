@@ -14,7 +14,7 @@ public class Validator {
     }
 
     public boolean isValidPassword(String password) {
-        String pattern = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$";
+        String pattern = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\\\\~`! @#$%^&*()_\\-+={\\[}\\]\\|\\:;\\\"'<,>.?/])(?=\\S+$).{8,}$";
         return password.matches(pattern);
     }
 
