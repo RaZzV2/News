@@ -69,11 +69,19 @@ public class AuthManager {
         return getUsersReference().child(getCurrentUserUid()).child("otpCode");
     }
 
+    public DatabaseReference getCurrentUserResendCode(){
+        return getUsersReference().child(getCurrentUserUid()).child("resendCode");
+    }
+
     public DatabaseReference getOTPReference(){
         return firebaseDatabase.getReference().child("otp");
     }
 
     public DatabaseReference getCurrentUserReference(){
         return getUsersReference().child(getCurrentUserUid());
+    }
+
+    public DatabaseReference getCurrentUserPhoneNumberReference(){
+        return getUsersReference().child(getCurrentUserUid()).child("phoneNumber");
     }
 }

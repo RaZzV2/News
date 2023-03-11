@@ -65,7 +65,6 @@ public class SendOTP extends AppCompatActivity {
                             }
                             @Override
                             public void onVerificationFailed(@NonNull FirebaseException e) {
-                                Toast.makeText(SendOTP.this, "Verification failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                             @Override
                             public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
