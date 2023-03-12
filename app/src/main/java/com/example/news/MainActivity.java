@@ -1,6 +1,7 @@
 package com.example.news;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -138,12 +139,15 @@ public class MainActivity extends AppCompatActivity {
         loginButton.setOnClickListener(v -> {
             String emailContent = email.getText().toString();
             String passwordContent = password.getText().toString();
-            if(!emailContent.isEmpty() && !passwordContent.isEmpty()) {
-                authenticate(emailContent, passwordContent);
+
+            if(TextUtils.isEmpty(emailContent)){
+                Toast.makeText(this, "Email can't be empty!", Toast.LENGTH_SHORT).show();
             }
-            else
-            {
-                Toast.makeText(this, "Fields can't be empty!", Toast.LENGTH_SHORT).show();
+            else if (TextUtils.isEmpty(passwordContent)) {
+                Toast.makeText(this, "Password can't be empty!", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                authenticate(emailContent, passwordContent);
             }
         });
 
