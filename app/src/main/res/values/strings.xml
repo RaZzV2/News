@@ -50,4 +50,6 @@
     <string name="email_verification">Email Verification</string>
     <string name="email_confirmation">To have full access to the application, you must confirm your email. Press the button below to start the confirmation</string>
     <string name="verify_email">VERIFY EMAIL</string>
+    <string name="reset_password">If you have forgotten your password, fill in the email below and we will send you a link to reset your password</string>
+    <string name="send_email">SEND EMAIL</string>
 </resources>
