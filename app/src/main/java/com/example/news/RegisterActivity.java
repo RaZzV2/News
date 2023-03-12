@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.List;
 import java.util.Objects;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -22,15 +23,19 @@ public class RegisterActivity extends AppCompatActivity {
     EditText phone_number;
     Button registerButton;
 
-    public void createAccountIfMailUnique(String emailContent, String passwordContent, String usernameContent){
-
-        EmailVerification emailVerification = new EmailVerification();
-        emailVerification.checkEmailExists(emailContent).addOnSuccessListener(emailExists -> {
-            if(emailExists){
-                Toast.makeText(RegisterActivity.this, "This email is already in use!", Toast.LENGTH_SHORT).show();
+    public void mailDuplicateVerification(String emailContent, String passwordContent, String usernameContent){
+        authManager = new AuthManager();
+        authManager.getFirebaseAuth().fetchSignInMethodsForEmail(emailContent).addOnCompleteListener(task -> {
+            if(task.isSuccessful()){
+                List<String> signInMethods = task.getResult().getSignInMethods();
+                if (signInMethods == null || signInMethods.isEmpty()) {
+                    createAccount(emailContent,passwordContent,usernameContent);
+                } else {
+                    Toast.makeText(RegisterActivity.this, "This email is already in use!", Toast.LENGTH_SHORT).show();
+                }
             }
             else {
-                createAccount(emailContent, passwordContent, usernameContent);
+                Toast.makeText(RegisterActivity.this, "Error occurred while checking email!", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -83,7 +88,7 @@ public class RegisterActivity extends AppCompatActivity {
                     "- Must have at least one capital letter\n" +
                     "- Must contain at least one number");
         }
-        else createAccountIfMailUnique(emailContent, passwordContent, usernameContent);
+        else mailDuplicateVerification(emailContent ,passwordContent ,usernameContent);
     }
 
     @Override
