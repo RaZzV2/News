@@ -65,7 +65,7 @@ public class SearchActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<News> call, Throwable t) {
+            public void onFailure(@NonNull Call<News> call, @NonNull Throwable t) {
 
             }
         });

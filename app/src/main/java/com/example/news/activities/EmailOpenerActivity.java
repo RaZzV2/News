@@ -60,9 +60,6 @@ public class EmailOpenerActivity extends AppCompatActivity {
             if (intent != null) {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
-                //intent = new Intent(getApplicationContext(), MainActivity.class);
-                //startActivity(intent);
-                //finish();
             } else {
                 Toast.makeText(this, "Gmail is not installed!", Toast.LENGTH_SHORT).show();
             }
