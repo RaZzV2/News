@@ -2,13 +2,16 @@ package com.example.news;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,6 +25,9 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
+import com.example.news.activities.MainActivity;
+import com.example.news.activities.SearchActivity;
+import com.example.news.activities.WebViewActivity;
 import com.example.news.classes.Article;
 import com.example.news.interfaces.OnItemClickListener;
 
@@ -42,7 +48,9 @@ public class Adapter extends RecyclerView.Adapter<Adapter.MyViewHolder> {
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.news_item, parent, false);
-        return new MyViewHolder(view, onItemClickListener);
+        MyViewHolder viewHolder = new MyViewHolder(view, onItemClickListener);
+        view.setOnClickListener(viewHolder);
+        return viewHolder;
     }
 
     @SuppressLint({"CheckResult", "SetTextI18n"})
@@ -78,6 +86,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.MyViewHolder> {
         holder.source.setText(model.getSource().getName());
         holder.time.setText("\u2022" + Utils.DateToTimeFormat(model.getPublishedAt()));
         holder.author.setText(model.getAuthor());
+        holder.title.setTag(model.getUrl());
 
 
     }
@@ -111,7 +120,14 @@ public class Adapter extends RecyclerView.Adapter<Adapter.MyViewHolder> {
 
         @Override
         public void onClick(View v) {
-            onItemClickListener.onItemClick(v, getBindingAdapterPosition());
+            Context context = v.getContext();
+            TextView title = v.findViewById(R.id.titleItem);
+            String url = title.getTag().toString();
+            //onItemClickListener.onItemClick(v, getBindingAdapterPosition());
+            Intent intent = new Intent(v.getContext(), WebViewActivity.class);
+            intent.putExtra("url", url);
+            context.startActivity(intent);
+
         }
     }
 }
