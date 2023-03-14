@@ -1,4 +1,4 @@
-package com.example.news;
+package com.example.news.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +9,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.news.AuthManager;
+import com.example.news.R;
+import com.example.news.classes.Validator;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
@@ -16,7 +19,7 @@ import com.google.firebase.auth.PhoneAuthProvider;
 
 import java.util.concurrent.TimeUnit;
 
-public class SendOTP extends AppCompatActivity {
+public class SendOtpActivity extends AppCompatActivity {
 
     AuthManager authManager;
 
@@ -41,17 +44,17 @@ public class SendOTP extends AppCompatActivity {
         Validator validator = new Validator();
         phoneNumber = startingDigitPhoneNumber(phoneNumber);
         if(inputMobileIsEmpty(phoneNumber)){
-            Toast.makeText(SendOTP.this, "Enter mobile", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SendOtpActivity.this, "Enter mobile", Toast.LENGTH_SHORT).show();
             return;
         }
         else if(!validator.isValidPhoneNumber(phoneNumber)){
-            Toast.makeText(SendOTP.this, "Enter a valid phone number", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SendOtpActivity.this, "Enter a valid phone number", Toast.LENGTH_SHORT).show();
             return;
         }
         authManager.addPhoneNumberToUser(phoneNumber);
         sendConfirmationCode(phoneNumber);
-        Toast.makeText(SendOTP.this, "Code sent!", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(SendOTP.this, ReceiveOTP.class);
+        Toast.makeText(SendOtpActivity.this, "Code sent!", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(SendOtpActivity.this, ReceiveOtpActivity.class);
         startActivity(intent);
     }
 
@@ -82,7 +85,7 @@ public class SendOTP extends AppCompatActivity {
         super.onResume();
         authManager = new AuthManager();
         if(authManager.getCurrentUser() == null){
-            Intent intent = new Intent(SendOTP.this, MainActivity.class);
+            Intent intent = new Intent(SendOtpActivity.this, MainActivity.class);
             startActivity(intent);
             finish();
         }

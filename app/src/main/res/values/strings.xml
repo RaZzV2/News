@@ -57,4 +57,5 @@
     <string name="date">01 January 2001</string>
     <string name="desc">Desc</string>
     <string name="source">Source</string>
+    <string name="time">Time</string>
 </resources>

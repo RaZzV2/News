@@ -1,4 +1,4 @@
-package com.example.news;
+package com.example.news.classes;
 
 public class UserHelperClass {
     String email, username, password;

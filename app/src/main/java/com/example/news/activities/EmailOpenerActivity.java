@@ -1,4 +1,4 @@
-package com.example.news;
+package com.example.news.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,9 +7,11 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.news.AuthManager;
+import com.example.news.R;
 import com.google.firebase.auth.FirebaseUser;
 
-public class EmailOpener extends AppCompatActivity {
+public class EmailOpenerActivity extends AppCompatActivity {
 
     Button openGmail;
 

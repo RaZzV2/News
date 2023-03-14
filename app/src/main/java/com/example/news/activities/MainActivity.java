@@ -1,4 +1,4 @@
-package com.example.news;
+package com.example.news.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +10,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.news.AuthManager;
+import com.example.news.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -47,9 +50,9 @@ public class MainActivity extends AppCompatActivity {
                     if (snapshot.exists()) {
                         Intent intent;
                         if (Boolean.FALSE.equals(snapshot.getValue(Boolean.class)))
-                            intent = new Intent(getApplicationContext(), SendOTP.class);
+                            intent = new Intent(getApplicationContext(), SendOtpActivity.class);
                         else if (!authManager.getCurrentUser().isEmailVerified() && authManager.getCurrentUser().getEmail() != null) {
-                            intent = new Intent(getApplicationContext(), EmailOpener.class);
+                            intent = new Intent(getApplicationContext(), EmailOpenerActivity.class);
                         }
                         else
                             intent = new Intent(getApplicationContext(), HomeActivity.class);
@@ -85,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
             boolean numberConfirmationColumnValue = Boolean.TRUE.equals(snapshot.child("confirmedPhone").getValue(Boolean.class));
             Intent intent;
             if(!numberConfirmationColumnValue){
-                intent = new Intent(MainActivity.this, SendOTP.class);
+                intent = new Intent(MainActivity.this, SendOtpActivity.class);
             }
             else if(!authManager.getCurrentUser().isEmailVerified()){
                 Toast.makeText(MainActivity.this, "Email is not verified!",Toast.LENGTH_SHORT).show();

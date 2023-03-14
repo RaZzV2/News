@@ -1,4 +1,4 @@
-package com.example.news;
+package com.example.news.activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -13,6 +13,10 @@ import android.widget.ImageView;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.news.AuxiliarySend;
+import com.example.news.R;
+
 import java.io.ByteArrayOutputStream;
 
 public class ImageSenderActivity extends AppCompatActivity {

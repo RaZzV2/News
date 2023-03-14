@@ -1,5 +1,6 @@
 package com.example.news;
 
+import com.example.news.classes.UserHelperClass;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;

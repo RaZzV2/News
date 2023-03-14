@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -23,16 +23,17 @@
                 android:id="@+id/img"
                 android:transitionName="img"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="100dp"
                 android:scaleType="centerCrop"
-                tools:ignore="UnusedAttribute"/>
+                tools:ignore="ContentDescription,UnusedAttribute"/>
 
             <ImageView
                 android:id="@+id/shadow_bottom"
                 android:src="@drawable/bottom_shadow"
                 android:layout_alignBottom="@id/img"
                 android:layout_width="match_parent"
-                android:layout_height="80dp" />
+                android:layout_height="80dp"
+                tools:ignore="ContentDescription" />
             
             <ProgressBar
                 android:id="@+id/progressLoadPhoto"
@@ -53,11 +54,9 @@
                 android:layout_marginEnd="160dp"
                 android:text="@string/author"
                 android:gravity="bottom"
-                android:layout_alignLeft="@+id/title"
-                android:layout_alignStart="@+id/title"
+                android:layout_alignStart="@+id/titleItem"
                 android:layout_alignTop="@+id/layoutDate"
-                android:layout_alignEnd="@+id/layoutDate"
-                android:layout_marginRight="@+id/layoutDate" />
+                android:layout_alignEnd="@+id/layoutDate" />
 
             <FrameLayout
                 android:id="@+id/layoutDate"
@@ -75,7 +74,8 @@
                     android:layout_width="18dp"
                     android:layout_height="18dp"
                     android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"/>
+                    android:layout_marginRight="5dp"
+                    tools:ignore="ContentDescription" />
                 
                 <TextView
                     android:id="@+id/publishedAt"
@@ -100,13 +100,13 @@
                 android:textSize="17sp"
                 android:layout_marginTop="10dp"
                 android:layout_below="@id/img"
-                android:id="@+id/title" />
+                android:id="@+id/titleItem" />
 
             <TextView
                 android:id="@+id/desc"
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
-                android:layout_below="@id/title"
+                android:layout_below="@id/titleItem"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="5dp"
@@ -118,7 +118,7 @@
                 android:layout_height="20dp"
                 android:layout_below="@id/desc"
                 android:layout_marginTop="10dp"
-                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginBottom="10dp"
                 android:fontFamily="sans-serif-light"
                 android:textStyle="bold"
@@ -130,17 +130,18 @@
                 android:text="@string/source"/>
 
             <TextView
+                android:id="@+id/timeItem"
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
                 android:layout_below="@id/desc"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
-                android:layout_toRightOf="@id/source"
+                android:layout_toEndOf="@id/source"
                 android:maxLines="1"
                 android:drawablePadding="10dp"
                 android:singleLine="true"
                 android:ellipsize="end"
-                android:text="Time" />
+                android:text="@string/time" />
 
 
         </RelativeLayout>

@@ -1,8 +1,7 @@
-package com.example.news;
+package com.example.news.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -10,6 +9,10 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.news.AuthManager;
+import com.example.news.R;
+import com.example.news.classes.UserHelperClass;
+import com.example.news.classes.Validator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -55,7 +58,7 @@ public class RegisterActivity extends AppCompatActivity {
                     if (secondTask.isSuccessful()) {
                         String userId = Objects.requireNonNull(task.getResult().getUser()).getUid();
                         authManager.registerToRealtimeDatabase(userHelperClass, userId);
-                        Intent intent = new Intent(getApplicationContext(), SendOTP.class);
+                        Intent intent = new Intent(getApplicationContext(), SendOtpActivity.class);
                         startActivity(intent);
                     } else {
                         Toast.makeText(RegisterActivity.this, "Error!", Toast.LENGTH_SHORT).show();

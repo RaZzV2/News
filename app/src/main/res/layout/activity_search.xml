@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background"
-    tools:context=".SearchActivity">
+    android:orientation="vertical"
+    tools:context=".activities.SearchActivity">
 
     <RelativeLayout
+        android:orientation="vertical"
+        android:id="@+id/first"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -38,7 +41,20 @@
             android:autofillHints="search"
             android:textSize="16sp"/>
 
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/first">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:scrollbars="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </androidx.recyclerview.widget.RecyclerView>
 
     </RelativeLayout>
 
-</ScrollView>
+</RelativeLayout>

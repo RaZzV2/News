@@ -1,4 +1,4 @@
-package com.example.news;
+package com.example.news.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -12,6 +12,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.news.AuthManager;
+import com.example.news.R;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
@@ -22,7 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.concurrent.TimeUnit;
 
-public class ReceiveOTP extends AppCompatActivity {
+public class ReceiveOtpActivity extends AppCompatActivity {
     AuthManager authManager;
 
     TextView resendOTP;
@@ -63,14 +65,14 @@ public class ReceiveOTP extends AppCompatActivity {
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(currentOTP, code);
         authManager.getCurrentUser().linkWithCredential(credential).addOnCompleteListener(task -> {
             if(task.isSuccessful()){
-                Toast.makeText(ReceiveOTP.this, "Phone number has been verified!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ReceiveOtpActivity.this, "Phone number has been verified!", Toast.LENGTH_SHORT).show();
                 authManager.getCurrentUserConfirmedPhoneReference().setValue(true);
-                Intent intent = new Intent(getApplicationContext(), EmailOpener.class);
+                Intent intent = new Intent(getApplicationContext(), EmailOpenerActivity.class);
                 startActivity(intent);
                 finish();
             }
             else{
-                Toast.makeText(ReceiveOTP.this, "The OTP code entered is wrong!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ReceiveOtpActivity.this, "The OTP code entered is wrong!", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -83,7 +85,7 @@ public class ReceiveOTP extends AppCompatActivity {
                 String phoneNumber = snapshot.child("phoneNumber").getValue(String.class);
                 assert phoneNumber != null;
                 PhoneAuthOptions options = PhoneAuthOptions.newBuilder(authManager.getFirebaseAuth()).setPhoneNumber(phoneNumber)
-                        .setTimeout(60L, TimeUnit.SECONDS).setActivity(ReceiveOTP.this).setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+                        .setTimeout(60L, TimeUnit.SECONDS).setActivity(ReceiveOtpActivity.this).setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
                             @Override
                             public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
                             }
@@ -97,7 +99,7 @@ public class ReceiveOTP extends AppCompatActivity {
                             public void onCodeSent (@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken){
                                 authManager = new AuthManager();
                                 authManager.getCurrentUserReference().child("otpCode").setValue(s);
-                                Toast.makeText(ReceiveOTP.this, "The code has been sent!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ReceiveOtpActivity.this, "The code has been sent!", Toast.LENGTH_SHORT).show();
                             }
                         }).build();
 
