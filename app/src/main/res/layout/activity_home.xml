@@ -74,22 +74,22 @@
                 android:layout_marginTop="20dp"
                 />
 
-            <EditText
-                android:id="@+id/editTextTextPersonName2"
+            <TextView
+                android:id="@+id/searchBar"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:ems="10"
-                android:inputType="textPersonName"
                 android:hint="@string/search_news"
                 android:textStyle="italic"
+                android:gravity="left|center"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="32dp"
                 android:layout_marginStart="32dp"
                 android:background="@drawable/edittext_search_background"
                 android:drawablePadding="10dp"
-                android:drawableStart="@drawable/search"
                 android:autofillHints="search"
-                android:textSize="16sp"/>
+                android:textSize="16sp"
+                app:drawableStartCompat="@drawable/search" />
 
             <LinearLayout
                 android:layout_width="match_parent"

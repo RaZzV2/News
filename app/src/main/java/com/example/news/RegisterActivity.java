@@ -2,8 +2,10 @@ package com.example.news;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +24,8 @@ public class RegisterActivity extends AppCompatActivity {
     EditText password;
     EditText phone_number;
     Button registerButton;
+
+    TextView alreadyHaveAnAccount;
 
     public void mailDuplicateVerification(String emailContent, String passwordContent, String usernameContent){
         authManager = new AuthManager();
@@ -102,6 +106,7 @@ public class RegisterActivity extends AppCompatActivity {
         password = findViewById(R.id.password);
         registerButton = findViewById(R.id.register_button);
         phone_number = findViewById(R.id.phone_number);
+        alreadyHaveAnAccount = findViewById(R.id.alreadyHaveAnAccount);
 
         registerButton.setOnClickListener(v -> {
             final String emailContent = email.getText().toString();
@@ -111,6 +116,11 @@ public class RegisterActivity extends AppCompatActivity {
             checkValidatorsAndCreateAccount(emailContent,passwordContent, usernameContent);
         });
 
+
+        alreadyHaveAnAccount.setOnClickListener(v -> {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        });
 
     }
 

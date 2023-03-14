@@ -1,6 +1,10 @@
 package com.example.news;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,6 +22,9 @@ public class HomeActivity extends AppCompatActivity {
 
     TextView welcomeTitle;
 
+    TextView searchBar;
+
+
 
     public void logOut(){
         authManager = new AuthManager();
@@ -32,6 +39,13 @@ public class HomeActivity extends AppCompatActivity {
         logOut = findViewById(R.id.log_out);
         logOut.setOnClickListener(v -> logOut());
         welcomeTitle = findViewById(R.id.title);
+        searchBar = findViewById(R.id.searchBar);
+
+
+        searchBar.setOnClickListener(v -> {
+            Intent intent = new Intent(HomeActivity.this, SearchActivity.class);
+            startActivity(intent);
+        });
 
         authManager = new AuthManager();
         authManager.getUsersReference().child(authManager.getCurrentUserUid()).child("username").addListenerForSingleValueEvent(new ValueEventListener() {
