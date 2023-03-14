@@ -52,4 +52,9 @@
     <string name="verify_email">VERIFY EMAIL</string>
     <string name="reset_password">If you have forgotten your password, fill in the email below and we will send you a link to reset your password</string>
     <string name="send_email">SEND EMAIL</string>
+    <string name="author">Author</string>
+    <string name="title">Title</string>
+    <string name="date">01 January 2001</string>
+    <string name="desc">Desc</string>
+    <string name="source">Source</string>
 </resources>

@@ -21,6 +21,7 @@ public class SearchActivity extends AppCompatActivity {
 
         back = findViewById(R.id.back);
         searchBar = findViewById(R.id.searchBar);
+        searchBar.requestFocus();
 
         back.setOnClickListener(v -> {
             Intent intent = new Intent(SearchActivity.this, HomeActivity.class);
