@@ -54,20 +54,12 @@ public class RegisterActivity extends AppCompatActivity {
             if(task.isSuccessful()){
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 if(user != null){
-                user.sendEmailVerification().addOnCompleteListener(secondTask -> {
-                    if (secondTask.isSuccessful()) {
                         String userId = Objects.requireNonNull(task.getResult().getUser()).getUid();
                         authManager.registerToRealtimeDatabase(userHelperClass, userId);
                         Intent intent = new Intent(getApplicationContext(), SendOtpActivity.class);
                         startActivity(intent);
-                    } else {
-                        Toast.makeText(RegisterActivity.this, "Error!", Toast.LENGTH_SHORT).show();
                     }
-                });
-
-
                 }
-            }
             else {
                 Toast.makeText(RegisterActivity.this, "Registration failed!", Toast.LENGTH_SHORT).show();
             }

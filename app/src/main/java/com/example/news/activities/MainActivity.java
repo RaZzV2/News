@@ -31,18 +31,6 @@ public class MainActivity extends AppCompatActivity {
     FirebaseAuth firebaseAuth;
 
     TextView forgotPassword;
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        authManager = new AuthManager();
-        FirebaseUser currentUser = authManager.getCurrentUser();
-        if(currentUser != null) {
-            authManager.reload();
-            onStartVerification();
-        }
-    }
-
         public void onStartVerification(){
             authManager.getCurrentUserConfirmedPhoneReference().addValueEventListener(new ValueEventListener() {
                 @Override
@@ -52,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
                         if (Boolean.FALSE.equals(snapshot.getValue(Boolean.class)))
                             intent = new Intent(getApplicationContext(), SendOtpActivity.class);
                         else if (!authManager.getCurrentUser().isEmailVerified() && authManager.getCurrentUser().getEmail() != null) {
-                            intent = new Intent(getApplicationContext(), EmailOpenerActivity.class);
+                            intent = new Intent(getApplicationContext(), ConfirmEmailActivity.class);
                         }
                         else
                             intent = new Intent(getApplicationContext(), HomeActivity.class);
@@ -121,6 +109,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        authManager = new AuthManager();
+        FirebaseUser currentUser = authManager.getCurrentUser();
+        if(currentUser != null) {
+            authManager.reload();
+            onStartVerification();
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -24,7 +24,7 @@
             android:name=".activities.ForgotPasswordActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.EmailOpenerActivity"
+            android:name=".activities.ConfirmEmailActivity"
             android:exported="false" />
         <activity
             android:name=".activities.ReceiveOtpActivity"
@@ -39,10 +39,10 @@
         <activity
             android:name=".activities.MainActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
         </activity>
         <activity
             android:name=".activities.RegisterActivity"

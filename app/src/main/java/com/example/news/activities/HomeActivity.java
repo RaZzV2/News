@@ -31,6 +31,15 @@ public class HomeActivity extends AppCompatActivity {
         Intent intent = new Intent(HomeActivity.this, MainActivity.class);
         startActivity(intent);
     }
+
+    protected void onStart() {
+        super.onStart();
+        authManager = new AuthManager();
+        if(authManager.getCurrentUser() == null) {
+            authManager.logOut();
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

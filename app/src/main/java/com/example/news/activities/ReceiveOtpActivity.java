@@ -48,7 +48,7 @@ public class ReceiveOtpActivity extends AppCompatActivity {
     void finishConfirmation(String code)
     {
         authManager = new AuthManager();
-        authManager.getUsersReference().child(authManager.getCurrentUserUid()).addValueEventListener(new ValueEventListener() {
+        authManager.getUsersReference().child(authManager.getCurrentUserUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
@@ -67,16 +67,15 @@ public class ReceiveOtpActivity extends AppCompatActivity {
     void phoneConfirmation(String currentOTP, String code){
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(currentOTP, code);
         authManager.getCurrentUser().linkWithCredential(credential).addOnCompleteListener(task -> {
-            if(task.isSuccessful()){
-                Toast.makeText(ReceiveOtpActivity.this, "Phone number has been verified!", Toast.LENGTH_SHORT).show();
-                authManager.getCurrentUserConfirmedPhoneReference().setValue(true);
-                Intent intent = new Intent(getApplicationContext(), EmailOpenerActivity.class);
-                startActivity(intent);
-                finish();
-            }
-            else{
-                Toast.makeText(ReceiveOtpActivity.this, "The OTP code entered is wrong!", Toast.LENGTH_SHORT).show();
-            }
+                if (task.isSuccessful()) {
+                    Toast.makeText(ReceiveOtpActivity.this, "Phone number has been verified!", Toast.LENGTH_SHORT).show();
+                    authManager.getCurrentUserConfirmedPhoneReference().setValue(true);
+                    Intent intent = new Intent(getApplicationContext(), ConfirmEmailActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Toast.makeText(ReceiveOtpActivity.this, "The OTP code entered is wrong!", Toast.LENGTH_SHORT).show();
+                }
         });
     }
 
@@ -93,16 +92,10 @@ public class ReceiveOtpActivity extends AppCompatActivity {
                 if (s.length() > 0 && Character.isDigit(s.charAt(0))) {
                     secondButton.requestFocus();
                 }
-                else if (s.length() == 0 && before == 1 && start == 0 && count == 0) {
-                    firstButton.setText("");
-                    fifthButton.clearFocus();
-                    firstButton.requestFocus();
-                }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-
             }
         });
         secondButton.addTextChangedListener(new TextWatcher() {
@@ -123,6 +116,7 @@ public class ReceiveOtpActivity extends AppCompatActivity {
                 if (s.length() == 0) {
                     secondButton.focusSearch(View.FOCUS_LEFT).requestFocus();
                 }
+
             }
         });
 
