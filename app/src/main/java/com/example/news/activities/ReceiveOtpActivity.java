@@ -4,6 +4,9 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -75,6 +78,136 @@ public class ReceiveOtpActivity extends AppCompatActivity {
                 Toast.makeText(ReceiveOtpActivity.this, "The OTP code entered is wrong!", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    void initialize() {
+        firstButton.requestFocus();
+        firstButton.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() > 0 && Character.isDigit(s.charAt(0))) {
+                    secondButton.requestFocus();
+                }
+                else if (s.length() == 0 && before == 1 && start == 0 && count == 0) {
+                    firstButton.setText("");
+                    fifthButton.clearFocus();
+                    firstButton.requestFocus();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        secondButton.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() > 0 && Character.isDigit(s.charAt(0))) {
+                    thirdButton.requestFocus();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() == 0) {
+                    secondButton.focusSearch(View.FOCUS_LEFT).requestFocus();
+                }
+            }
+        });
+
+        thirdButton.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() > 0 && Character.isDigit(s.charAt(0))) {
+                    fourthButton.requestFocus();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() == 0) {
+                    thirdButton.focusSearch(View.FOCUS_LEFT).requestFocus();
+                }
+            }
+        });
+
+        fourthButton.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() > 0 && Character.isDigit(s.charAt(0))) {
+                    fifthButton.requestFocus();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() == 0) {
+                    fourthButton.focusSearch(View.FOCUS_LEFT).requestFocus();
+                }
+            }
+        });
+
+        fifthButton.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() > 0 && Character.isDigit(s.charAt(0))) {
+                    sixthButton.requestFocus();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() == 0) {
+                    fifthButton.focusSearch(View.FOCUS_LEFT).requestFocus();
+                }
+            }
+        });
+
+        sixthButton.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() == 0) {
+                    sixthButton.focusSearch(View.FOCUS_LEFT).requestFocus();
+                }
+            }
+        });
+
     }
 
     void resendCode(){
@@ -151,6 +284,7 @@ public class ReceiveOtpActivity extends AppCompatActivity {
         sixthButton = findViewById(R.id.input6);
         resendOTP = findViewById(R.id.resendOTP);
 
+        initialize();
 
         resendOTP.setOnClickListener(v -> {
             resendCode();
@@ -162,7 +296,12 @@ public class ReceiveOtpActivity extends AppCompatActivity {
         verifyButton.setOnClickListener(v -> {
             String code = firstButton.getText().toString() + secondButton.getText().toString() + thirdButton.getText().toString()
                     + fourthButton.getText().toString() + fifthButton.getText().toString() + sixthButton.getText().toString();
-            finishConfirmation(code);
+            if(code.length() == 6) {
+                finishConfirmation(code);
+            }
+            else {
+                Toast.makeText(getApplicationContext(), "The OTP code is not entered correctly", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 }
