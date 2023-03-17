@@ -2,12 +2,14 @@ package com.example.news.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -23,6 +25,8 @@ import com.google.firebase.database.ValueEventListener;
 public class MainActivity extends AppCompatActivity {
 
     AuthManager authManager;
+
+    boolean isButtonClickable = true;
     EditText email;
     EditText password;
     Button loginButton;
@@ -31,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     FirebaseAuth firebaseAuth;
 
     TextView forgotPassword;
-        public void onStartVerification(){
+    public void onStartVerification(){
             authManager.getCurrentUserConfirmedPhoneReference().addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -63,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
                 secureAuthenticate();
             }
             else{
-                Toast.makeText(getApplicationContext(), "Login failed!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Wrong email or password!", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -138,18 +142,19 @@ public class MainActivity extends AppCompatActivity {
         });
 
         loginButton.setOnClickListener(v -> {
-            String emailContent = email.getText().toString();
-            String passwordContent = password.getText().toString();
-
-            if(TextUtils.isEmpty(emailContent)){
-                Toast.makeText(this, "Email can't be empty!", Toast.LENGTH_SHORT).show();
-            }
-            else if (TextUtils.isEmpty(passwordContent)) {
-                Toast.makeText(this, "Password can't be empty!", Toast.LENGTH_SHORT).show();
-            }
-            else {
-                authenticate(emailContent, passwordContent);
-            }
+                if(isButtonClickable) {
+                    String emailContent = email.getText().toString();
+                    String passwordContent = password.getText().toString();
+                    if (TextUtils.isEmpty(emailContent)) {
+                        Toast.makeText(this, "Email can't be empty!", Toast.LENGTH_SHORT).show();
+                    } else if (TextUtils.isEmpty(passwordContent)) {
+                        Toast.makeText(this, "Password can't be empty!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        authenticate(emailContent, passwordContent);
+                    }
+                    isButtonClickable = false;
+                    new Handler().postDelayed(() -> isButtonClickable = true, 2000);
+                }
         });
 
         forgotPassword.setOnClickListener(v -> {

@@ -2,6 +2,7 @@ package com.example.news.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,6 +18,8 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     AuthManager authManager;
     EditText email;
     Button sendEmail;
+
+    boolean isButtonClickable = true;
 
 
     void sendPasswordResetEmail(){
@@ -54,6 +57,12 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         sendEmail = findViewById(R.id.sendEmail);
         authManager = new AuthManager();
 
-        sendEmail.setOnClickListener(v -> sendPasswordResetEmail());
+        sendEmail.setOnClickListener(v -> {
+                if(isButtonClickable) {
+                sendPasswordResetEmail();
+                isButtonClickable = false;
+                new Handler().postDelayed(() -> isButtonClickable = true, 2000);
+        }
+        });
     }
 }

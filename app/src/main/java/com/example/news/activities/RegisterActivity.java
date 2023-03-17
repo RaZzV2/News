@@ -2,6 +2,7 @@ package com.example.news.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -22,6 +23,8 @@ import java.util.Objects;
 public class RegisterActivity extends AppCompatActivity {
 
     AuthManager authManager;
+
+    boolean isButtonClickable = true;
     EditText email;
     EditText username;
     EditText password;
@@ -104,11 +107,15 @@ public class RegisterActivity extends AppCompatActivity {
         alreadyHaveAnAccount = findViewById(R.id.alreadyHaveAnAccount);
 
         registerButton.setOnClickListener(v -> {
-            final String emailContent = email.getText().toString();
-            final String usernameContent = username.getText().toString();
-            final String passwordContent = password.getText().toString();
+            if(isButtonClickable) {
+                final String emailContent = email.getText().toString();
+                final String usernameContent = username.getText().toString();
+                final String passwordContent = password.getText().toString();
 
-            checkValidatorsAndCreateAccount(emailContent,passwordContent, usernameContent);
+                checkValidatorsAndCreateAccount(emailContent, passwordContent, usernameContent);
+                isButtonClickable = false;
+                new Handler().postDelayed(() -> isButtonClickable = true, 2000);
+            }
         });
 
 
