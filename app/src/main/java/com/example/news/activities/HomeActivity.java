@@ -1,27 +1,32 @@
 package com.example.news.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.news.AuthManager;
 import com.example.news.R;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
+import com.google.android.material.navigation.NavigationView;
 
 public class HomeActivity extends AppCompatActivity {
 
-    TextView logOut;
+    DrawerLayout drawerLayout;
 
     AuthManager authManager;
 
     TextView welcomeTitle;
 
     TextView searchBar;
+
+    Toolbar toolbar;
+
+    NavigationView navigationView;
 
 
 
@@ -30,6 +35,7 @@ public class HomeActivity extends AppCompatActivity {
         authManager.logOut();
         Intent intent = new Intent(HomeActivity.this, MainActivity.class);
         startActivity(intent);
+        finish();
     }
 
     protected void onStart() {
@@ -40,14 +46,32 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        logOut = findViewById(R.id.log_out);
-        logOut.setOnClickListener(v -> logOut());
-        welcomeTitle = findViewById(R.id.title);
         searchBar = findViewById(R.id.searchBar);
+        toolbar = findViewById(R.id.toolbar);
+        drawerLayout = findViewById(R.id.drawerLayout);
+        navigationView = findViewById(R.id.navigationView);
+
+        findViewById(R.id.menu).setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
+
+        navigationView.setNavigationItemSelectedListener(item -> {
+            Intent intent;
+            switch (item.getItemId()) {
+                case R.id.menuLogout:
+                    logOut();
+                    break;
+
+                case R.id.menuProfile:
+                    intent = new Intent(this, ProfileActivity.class);
+                    startActivity(intent);
+                    break;
+            }
+            return true;
+        });
 
 
         searchBar.setOnClickListener(v -> {
@@ -55,8 +79,7 @@ public class HomeActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        authManager = new AuthManager();
-        authManager.getUsersReference().child(authManager.getCurrentUserUid()).child("username").addListenerForSingleValueEvent(new ValueEventListener() {
+        /*authManager.getUsersReference().child(authManager.getCurrentUserUid()).child("username").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()) {
@@ -69,6 +92,6 @@ public class HomeActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        });
+        });*/
     }
 }
