@@ -15,6 +15,15 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".activities.ChangePhoneNumber"
+            android:exported="false" />
+        <activity
+            android:name=".activities.ChangeUsername"
+            android:exported="false" />
+        <activity
+            android:name=".activities.ChangeEmailActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.ProfileActivity"
             android:exported="false" />
         <activity
@@ -31,7 +40,7 @@
             android:exported="false" />
         <activity
             android:name=".activities.ReceiveOtpActivity"
-            android:exported="false"></activity>
+            android:exported="false" />
         <activity
             android:name=".activities.SendOtpActivity"
             android:exported="false" />
@@ -43,6 +52,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

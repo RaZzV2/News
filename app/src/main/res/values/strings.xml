@@ -71,4 +71,6 @@
     <string name="warning1">Provide your personal information, even if the account is for something like a business or pet. It won\'t be part of your public profile.</string>
     <string name="warning2">To keep your account secure, don\'t enter an email or phone number that belongs to someone else.</string>
     <string name="e_mail_address">E-mail address</string>
+    <string name="new_email">New email</string>
+    <string name="change_phone_number">Change phone number</string>
 </resources>

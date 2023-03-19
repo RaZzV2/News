@@ -13,8 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
-import com.example.news.RealtimeDatabaseManager;
 import com.example.news.R;
+import com.example.news.RealtimeDatabaseManager;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -38,6 +38,10 @@ public class ProfileActivity extends AppCompatActivity {
 
     LinearLayout changeEmailLayout;
 
+    LinearLayout changeUsernameLayout;
+
+    LinearLayout changePhoneNumberLayout;
+
 
 
     void initialize() {
@@ -59,9 +63,11 @@ public class ProfileActivity extends AppCompatActivity {
         realtimeDatabaseManager.getCurrentUserReference().child("image").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Glide.with(ProfileActivity.this)
-                        .load(snapshot.getValue(String.class))
-                        .into(changeProfilePicture);
+                if(!isDestroyed()) {
+                    Glide.with(ProfileActivity.this)
+                            .load(snapshot.getValue(String.class))
+                            .into(changeProfilePicture);
+                }
             }
 
             @Override
@@ -73,6 +79,12 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        initialize();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
@@ -80,12 +92,18 @@ public class ProfileActivity extends AppCompatActivity {
         changeEmail = findViewById(R.id.changeEmail);
         changePhoneNumber = findViewById(R.id.changePhoneNumber);
         changeUsername = findViewById(R.id.changeUsername);
-        changeEmailLayout = findViewById(R.id.changeEmailLayout);
+
+
         changeProfilePicture = findViewById(R.id.changeProfilePicture);
         back = findViewById(R.id.back);
-        initialize();
+        changeEmailLayout = findViewById(R.id.changeEmailLayout);
+        changeUsernameLayout = findViewById(R.id.changeUsernameLayout);
+        changePhoneNumberLayout = findViewById(R.id.changePhoneNumberLayout);
 
-        changeEmailLayout.setOnClickListener(v -> Toast.makeText(ProfileActivity.this, "test", Toast.LENGTH_SHORT).show());
+        changeEmailLayout.setOnClickListener(v -> startActivity(new Intent(ProfileActivity.this, ChangeEmailActivity.class)));
+        changeUsernameLayout.setOnClickListener(v -> startActivity(new Intent(ProfileActivity.this, ChangeUsername.class)));
+        changePhoneNumberLayout.setOnClickListener(v -> startActivity(new Intent(ProfileActivity.this, ChangePhoneNumber.class)));
+
         back.setOnClickListener(v -> {
             Intent intent = new Intent(ProfileActivity.this, HomeActivity.class);
             startActivity(intent);
@@ -100,12 +118,10 @@ public class ProfileActivity extends AppCompatActivity {
                         StorageReference storageRef = storage.getReference().child("images");
                         StorageReference imageRef = storageRef.child(result.getLastPathSegment());
                         UploadTask uploadTask = imageRef.putFile(result);
-                        uploadTask.addOnSuccessListener(taskSnapshot -> {
-                            imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                                String downloadUrl = uri.toString();
-                                realtimeDatabaseManager.addImageToCurrentUser(downloadUrl);
-                            });
-                        });
+                        uploadTask.addOnSuccessListener(taskSnapshot -> imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                            String downloadUrl = uri.toString();
+                            realtimeDatabaseManager.addImageToCurrentUser(downloadUrl);
+                        }));
                     }
                 });
 

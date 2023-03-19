@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -12,6 +13,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.bumptech.glide.Glide;
 import com.example.news.RealtimeDatabaseManager;
 import com.example.news.R;
 import com.google.android.material.navigation.NavigationView;
@@ -28,6 +30,8 @@ public class HomeActivity extends AppCompatActivity {
     TextView welcomeTitle;
 
     TextView searchBar;
+
+    ImageView profilePicture;
 
     Toolbar toolbar;
     NavigationView navigationView;
@@ -80,6 +84,7 @@ public class HomeActivity extends AppCompatActivity {
         navigationView = findViewById(R.id.navigationView);
         headerView = navigationView.getHeaderView(0);
         currentUsername = headerView.findViewById(R.id.usernameNavigation);
+        profilePicture = headerView.findViewById(R.id.imageProfile);
 
         findViewById(R.id.menu).setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
 
@@ -106,6 +111,21 @@ public class HomeActivity extends AppCompatActivity {
         searchBar.setOnClickListener(v -> {
             Intent intent = new Intent(HomeActivity.this, SearchActivity.class);
             startActivity(intent);
+        });
+
+
+        realtimeDatabaseManager.getCurrentUserReference().child("image").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Glide.with(HomeActivity.this)
+                        .load(snapshot.getValue(String.class))
+                        .into(profilePicture);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
         });
 
     }
