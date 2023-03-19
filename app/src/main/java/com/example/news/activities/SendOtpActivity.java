@@ -9,7 +9,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.news.AuthManager;
+import com.example.news.RealtimeDatabaseManager;
 import com.example.news.R;
 import com.example.news.classes.Validator;
 import com.google.firebase.FirebaseException;
@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 
 public class SendOtpActivity extends AppCompatActivity {
 
-    AuthManager authManager;
+    RealtimeDatabaseManager realtimeDatabaseManager;
 
     EditText inputMobile;
 
@@ -40,7 +40,7 @@ public class SendOtpActivity extends AppCompatActivity {
     }
 
     void addPhoneNumberToCurrentUser(String phoneNumber){
-        authManager = new AuthManager();
+        realtimeDatabaseManager = new RealtimeDatabaseManager();
         Validator validator = new Validator();
         phoneNumber = startingDigitPhoneNumber(phoneNumber);
         if(inputMobileIsEmpty(phoneNumber)){
@@ -51,7 +51,7 @@ public class SendOtpActivity extends AppCompatActivity {
             Toast.makeText(SendOtpActivity.this, "Enter a valid phone number", Toast.LENGTH_SHORT).show();
             return;
         }
-        authManager.addPhoneNumberToUser(phoneNumber);
+        realtimeDatabaseManager.addPhoneNumberToUser(phoneNumber);
         sendConfirmationCode(phoneNumber);
         Toast.makeText(SendOtpActivity.this, "Code sent!", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(SendOtpActivity.this, ReceiveOtpActivity.class);
@@ -59,9 +59,9 @@ public class SendOtpActivity extends AppCompatActivity {
     }
 
     void sendConfirmationCode(String phoneNumber){
-        authManager = new AuthManager();
+        realtimeDatabaseManager = new RealtimeDatabaseManager();
         PhoneAuthOptions options =
-                PhoneAuthOptions.newBuilder(authManager.getFirebaseAuth()).setPhoneNumber(phoneNumber).setTimeout(60L,TimeUnit.SECONDS)
+                PhoneAuthOptions.newBuilder(realtimeDatabaseManager.getFirebaseAuth()).setPhoneNumber(phoneNumber).setTimeout(60L,TimeUnit.SECONDS)
                         .setActivity(this).setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
                             @Override
                             public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
@@ -72,7 +72,7 @@ public class SendOtpActivity extends AppCompatActivity {
                             @Override
                             public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
                                 super.onCodeSent(s, forceResendingToken);
-                                authManager.getCurrentUserOtpCode().setValue(s);
+                                realtimeDatabaseManager.getCurrentUserOtpCode().setValue(s);
                             }
                         }).build();
 
@@ -83,8 +83,8 @@ public class SendOtpActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        authManager = new AuthManager();
-        if(authManager.getCurrentUser() == null){
+        realtimeDatabaseManager = new RealtimeDatabaseManager();
+        if(realtimeDatabaseManager.getCurrentUser() == null){
             Intent intent = new Intent(SendOtpActivity.this, MainActivity.class);
             startActivity(intent);
             finish();
@@ -97,7 +97,7 @@ public class SendOtpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_send_otp);
 
 
-        authManager = new AuthManager();
+        realtimeDatabaseManager = new RealtimeDatabaseManager();
         inputMobile = findViewById(R.id.inputMobile);
         getOTP = findViewById(R.id.getOTP);
 

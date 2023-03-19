@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.news.AuthManager;
+import com.example.news.RealtimeDatabaseManager;
 import com.example.news.R;
 import com.example.news.classes.UserHelperClass;
 import com.example.news.classes.Validator;
@@ -22,7 +22,7 @@ import java.util.Objects;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    AuthManager authManager;
+    RealtimeDatabaseManager realtimeDatabaseManager;
 
     boolean isButtonClickable = true;
     EditText email;
@@ -34,8 +34,8 @@ public class RegisterActivity extends AppCompatActivity {
     TextView alreadyHaveAnAccount;
 
     public void mailDuplicateVerification(String emailContent, String passwordContent, String usernameContent){
-        authManager = new AuthManager();
-        authManager.getFirebaseAuth().fetchSignInMethodsForEmail(emailContent).addOnCompleteListener(task -> {
+        realtimeDatabaseManager = new RealtimeDatabaseManager();
+        realtimeDatabaseManager.getFirebaseAuth().fetchSignInMethodsForEmail(emailContent).addOnCompleteListener(task -> {
             if(task.isSuccessful()){
                 List<String> signInMethods = task.getResult().getSignInMethods();
                 if (signInMethods == null || signInMethods.isEmpty()) {
@@ -52,13 +52,13 @@ public class RegisterActivity extends AppCompatActivity {
 
     public void createAccount(String emailContent, String passwordContent, String usernameContent){
         final UserHelperClass userHelperClass = new UserHelperClass(emailContent, usernameContent, false, false);
-        authManager = new AuthManager();
-        authManager.register(emailContent, passwordContent, task -> {
+        realtimeDatabaseManager = new RealtimeDatabaseManager();
+        realtimeDatabaseManager.register(emailContent, passwordContent, task -> {
             if(task.isSuccessful()){
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 if(user != null){
                         String userId = Objects.requireNonNull(task.getResult().getUser()).getUid();
-                        authManager.registerToRealtimeDatabase(userHelperClass, userId);
+                        realtimeDatabaseManager.registerToRealtimeDatabase(userHelperClass, userId);
                         Intent intent = new Intent(getApplicationContext(), SendOtpActivity.class);
                         startActivity(intent);
                     }
@@ -98,7 +98,7 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_activity);
 
-        authManager = new AuthManager();
+        realtimeDatabaseManager = new RealtimeDatabaseManager();
         email = findViewById(R.id.email);
         username = findViewById(R.id.username);
         password = findViewById(R.id.password);

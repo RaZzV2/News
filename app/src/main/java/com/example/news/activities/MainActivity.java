@@ -13,7 +13,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.news.AuthManager;
+import com.example.news.RealtimeDatabaseManager;
 import com.example.news.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -24,7 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
 
-    AuthManager authManager;
+    RealtimeDatabaseManager realtimeDatabaseManager;
 
     boolean isButtonClickable = true;
     EditText email;
@@ -36,14 +36,14 @@ public class MainActivity extends AppCompatActivity {
 
     TextView forgotPassword;
     public void onStartVerification(){
-            authManager.getCurrentUserConfirmedPhoneReference().addValueEventListener(new ValueEventListener() {
+            realtimeDatabaseManager.getCurrentUserConfirmedPhoneReference().addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if (snapshot.exists()) {
                         Intent intent;
                         if (Boolean.FALSE.equals(snapshot.getValue(Boolean.class)))
                             intent = new Intent(getApplicationContext(), SendOtpActivity.class);
-                        else if (!authManager.getCurrentUser().isEmailVerified() && authManager.getCurrentUser().getEmail() != null) {
+                        else if (!realtimeDatabaseManager.getCurrentUser().isEmailVerified() && realtimeDatabaseManager.getCurrentUser().getEmail() != null) {
                             intent = new Intent(getApplicationContext(), ConfirmEmailActivity.class);
                         }
                         else
@@ -61,8 +61,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void authenticate(String emailContent, String passwordContent){
-        authManager = new AuthManager();
-        authManager.login(emailContent, passwordContent, task -> {
+        realtimeDatabaseManager = new RealtimeDatabaseManager();
+        realtimeDatabaseManager.login(emailContent, passwordContent, task -> {
             if(task.isSuccessful()){
                 secureAuthenticate();
             }
@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
             if(!numberConfirmationColumnValue){
                 intent = new Intent(MainActivity.this, SendOtpActivity.class);
             }
-            else if(!authManager.getCurrentUser().isEmailVerified()){
+            else if(!realtimeDatabaseManager.getCurrentUser().isEmailVerified()){
                 Toast.makeText(MainActivity.this, "Email is not verified!",Toast.LENGTH_SHORT).show();
                 intent = new Intent(MainActivity.this, MainActivity.class);
             }
@@ -96,10 +96,10 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void secureAuthenticate(){
-        authManager = new AuthManager();
-        FirebaseUser currentUser = authManager.getCurrentUser();
+        realtimeDatabaseManager = new RealtimeDatabaseManager();
+        FirebaseUser currentUser = realtimeDatabaseManager.getCurrentUser();
         if(currentUser != null){
-            DatabaseReference currentUserDatabase = authManager.getCurrentUserReference();
+            DatabaseReference currentUserDatabase = realtimeDatabaseManager.getCurrentUserReference();
             currentUserDatabase.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -116,10 +116,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        authManager = new AuthManager();
-        FirebaseUser currentUser = authManager.getCurrentUser();
+        realtimeDatabaseManager = new RealtimeDatabaseManager();
+        FirebaseUser currentUser = realtimeDatabaseManager.getCurrentUser();
         if(currentUser != null) {
-            authManager.reload();
+            realtimeDatabaseManager.reload();
             onStartVerification();
         }
     }
@@ -128,8 +128,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        authManager = new AuthManager();
-        firebaseAuth = authManager.getFirebaseAuth();
+        realtimeDatabaseManager = new RealtimeDatabaseManager();
+        firebaseAuth = realtimeDatabaseManager.getFirebaseAuth();
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
         loginButton = findViewById(R.id.login_button);

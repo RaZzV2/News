@@ -5,7 +5,7 @@
     android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
+    android:background="#eafffd"
     tools:context=".activities.HomeActivity">
 
 
@@ -32,7 +32,7 @@
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
-                    android:background="#595252"
+                    android:background="#D5BDAF"
                     app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
                     <ImageView
@@ -88,13 +88,13 @@
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="35dp"
                 android:layout_marginEnd="32dp"
-                android:background="@color/white"
+                android:background="@drawable/circular_shape"
                 android:gravity="center"
                 android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="80dp"
-                    android:layout_height="100dp"
+                    android:layout_height="80dp"
                     android:layout_marginEnd="22dp"
                     android:background="@drawable/background_category1"
                     android:orientation="vertical">
@@ -112,14 +112,14 @@
                         android:layout_height="wrap_content"
                         android:text="@string/photo"
                         android:textAlignment="center"
-                        android:textColor="#ffffff" />
+                        android:textColor="@color/black" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="80dp"
-                    android:layout_height="100dp"
+                    android:layout_height="80dp"
                     android:layout_marginEnd="22dp"
-                    android:background="@drawable/background_category2"
+                    android:background="@drawable/background_category1"
                     android:orientation="vertical">
 
                     <ImageView
@@ -135,13 +135,13 @@
                         android:layout_height="wrap_content"
                         android:text="@string/saved_news"
                         android:textAlignment="center"
-                        android:textColor="#ffffff" />
+                        android:textColor="@color/black" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="80dp"
-                    android:layout_height="100dp"
-                    android:background="@drawable/background_category3"
+                    android:layout_height="80dp"
+                    android:background="@drawable/background_category1"
                     android:orientation="vertical">
 
                     <ImageView
@@ -157,7 +157,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/preferences"
                         android:textAlignment="center"
-                        android:textColor="#ffffff" />
+                        android:textColor="#F1FAEE" />
 
                 </LinearLayout>
             </LinearLayout>
@@ -187,7 +187,7 @@
                     android:layout_weight="1"
                     android:text="@string/see_all"
                     android:textAlignment="viewEnd"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/black"
                     android:textStyle="bold" />
             </LinearLayout>
 

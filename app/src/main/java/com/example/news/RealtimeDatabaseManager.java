@@ -8,7 +8,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class AuthManager {
+public class RealtimeDatabaseManager {
     private final FirebaseAuth firebaseAuth;
     private final FirebaseUser firebaseUser;
     private final FirebaseDatabase firebaseDatabase;
@@ -21,7 +21,7 @@ public class AuthManager {
     }
     public FirebaseDatabase getFirebaseDatabase() { return firebaseDatabase; }
 
-    public AuthManager() {
+    public RealtimeDatabaseManager() {
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -56,6 +56,15 @@ public class AuthManager {
 
     public void addPhoneNumberToUser(String phoneNumber){
         getUsersReference().child(getCurrentUserUid()).child("phoneNumber").setValue(phoneNumber);
+    }
+
+
+    public void getCurrentUserImageProfile() {
+        getCurrentUserReference().child("image");
+    }
+
+    public void addImageToCurrentUser(String downloadURL) {
+        getCurrentUserReference().child("image").setValue(downloadURL);
     }
 
     public DatabaseReference getUsersReference(){

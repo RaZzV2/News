@@ -10,12 +10,12 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.news.AuthManager;
+import com.example.news.RealtimeDatabaseManager;
 import com.example.news.R;
 import com.example.news.classes.Validator;
 
 public class ForgotPasswordActivity extends AppCompatActivity {
-    AuthManager authManager;
+    RealtimeDatabaseManager realtimeDatabaseManager;
     EditText email;
     Button sendEmail;
 
@@ -28,7 +28,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         String emailContent = email.getText().toString();
         if(!TextUtils.isEmpty(emailContent)) {
             if (validator.isValidEmail(emailContent)) {
-                authManager.getFirebaseAuth().sendPasswordResetEmail(email.getText().toString()).addOnCompleteListener(task -> {
+                realtimeDatabaseManager.getFirebaseAuth().sendPasswordResetEmail(email.getText().toString()).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Toast.makeText(ForgotPasswordActivity.this, "Password reset email sent!", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(this, MainActivity.class);
@@ -55,7 +55,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
         email = findViewById(R.id.email);
         sendEmail = findViewById(R.id.sendEmail);
-        authManager = new AuthManager();
+        realtimeDatabaseManager = new RealtimeDatabaseManager();
 
         sendEmail.setOnClickListener(v -> {
                 if(isButtonClickable) {

@@ -15,7 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.news.AuthManager;
+import com.example.news.RealtimeDatabaseManager;
 import com.example.news.R;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.PhoneAuthCredential;
@@ -28,7 +28,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.concurrent.TimeUnit;
 
 public class ReceiveOtpActivity extends AppCompatActivity {
-    AuthManager authManager;
+    RealtimeDatabaseManager realtimeDatabaseManager;
 
     TextView resendOTP;
 
@@ -47,8 +47,8 @@ public class ReceiveOtpActivity extends AppCompatActivity {
 
     void finishConfirmation(String code)
     {
-        authManager = new AuthManager();
-        authManager.getUsersReference().child(authManager.getCurrentUserUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        realtimeDatabaseManager = new RealtimeDatabaseManager();
+        realtimeDatabaseManager.getUsersReference().child(realtimeDatabaseManager.getCurrentUserUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
@@ -66,10 +66,10 @@ public class ReceiveOtpActivity extends AppCompatActivity {
 
     void phoneConfirmation(String currentOTP, String code){
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(currentOTP, code);
-        authManager.getCurrentUser().linkWithCredential(credential).addOnCompleteListener(task -> {
+        realtimeDatabaseManager.getCurrentUser().linkWithCredential(credential).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     Toast.makeText(ReceiveOtpActivity.this, "Phone number has been verified!", Toast.LENGTH_SHORT).show();
-                    authManager.getCurrentUserConfirmedPhoneReference().setValue(true);
+                    realtimeDatabaseManager.getCurrentUserConfirmedPhoneReference().setValue(true);
                     Intent intent = new Intent(getApplicationContext(), ConfirmEmailActivity.class);
                     startActivity(intent);
                     finish();
@@ -205,13 +205,13 @@ public class ReceiveOtpActivity extends AppCompatActivity {
     }
 
     void resendCode(){
-        authManager = new AuthManager();
-        authManager.getCurrentUserReference().addListenerForSingleValueEvent(new ValueEventListener() {
+        realtimeDatabaseManager = new RealtimeDatabaseManager();
+        realtimeDatabaseManager.getCurrentUserReference().addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String phoneNumber = snapshot.child("phoneNumber").getValue(String.class);
                 assert phoneNumber != null;
-                PhoneAuthOptions options = PhoneAuthOptions.newBuilder(authManager.getFirebaseAuth()).setPhoneNumber(phoneNumber)
+                PhoneAuthOptions options = PhoneAuthOptions.newBuilder(realtimeDatabaseManager.getFirebaseAuth()).setPhoneNumber(phoneNumber)
                         .setTimeout(60L, TimeUnit.SECONDS).setActivity(ReceiveOtpActivity.this).setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
                             @Override
                             public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
@@ -224,8 +224,8 @@ public class ReceiveOtpActivity extends AppCompatActivity {
 
                             @Override
                             public void onCodeSent (@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken){
-                                authManager = new AuthManager();
-                                authManager.getCurrentUserReference().child("otpCode").setValue(s);
+                                realtimeDatabaseManager = new RealtimeDatabaseManager();
+                                realtimeDatabaseManager.getCurrentUserReference().child("otpCode").setValue(s);
                                 Toast.makeText(ReceiveOtpActivity.this, "The code has been sent!", Toast.LENGTH_SHORT).show();
                             }
                         }).build();

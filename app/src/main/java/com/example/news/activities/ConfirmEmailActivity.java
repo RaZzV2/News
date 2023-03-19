@@ -7,7 +7,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.news.AuthManager;
+import com.example.news.RealtimeDatabaseManager;
 import com.example.news.R;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -15,14 +15,14 @@ public class ConfirmEmailActivity extends AppCompatActivity {
 
     Button openGmail;
 
-    AuthManager authManager;
+    RealtimeDatabaseManager realtimeDatabaseManager;
 
 
     @Override
     public void onStart() {
         super.onStart();
-        authManager = new AuthManager();
-        FirebaseUser currentUser = authManager.getCurrentUser();
+        realtimeDatabaseManager = new RealtimeDatabaseManager();
+        FirebaseUser currentUser = realtimeDatabaseManager.getCurrentUser();
         if(currentUser != null) {
             if(currentUser.isEmailVerified()){
                 Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
@@ -33,8 +33,8 @@ public class ConfirmEmailActivity extends AppCompatActivity {
     }
 
     public void sendEmailConfirmation() {
-        authManager = new AuthManager();
-        FirebaseUser currentUser = authManager.getCurrentUser();
+        realtimeDatabaseManager = new RealtimeDatabaseManager();
+        FirebaseUser currentUser = realtimeDatabaseManager.getCurrentUser();
         if(currentUser != null) {
             currentUser.sendEmailVerification().addOnCompleteListener(task -> {
                 if(task.isSuccessful()) {
@@ -50,9 +50,9 @@ public class ConfirmEmailActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        authManager = new AuthManager();
-        authManager.reload();
-        FirebaseUser currentUser = authManager.getCurrentUser();
+        realtimeDatabaseManager = new RealtimeDatabaseManager();
+        realtimeDatabaseManager.reload();
+        FirebaseUser currentUser = realtimeDatabaseManager.getCurrentUser();
         if(currentUser != null){
             if(currentUser.isEmailVerified()){
                 Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
