@@ -1,16 +1,15 @@
 package com.example.news.activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.news.R;
 import com.example.news.RealtimeDatabaseManager;
@@ -70,7 +69,6 @@ public class ChangeEmailActivity extends AppCompatActivity {
 
         done.setOnClickListener(v -> {
             realtimeDatabaseManager = new RealtimeDatabaseManager();
-            realtimeDatabaseManager.reload();
             Validator validator = new Validator();
             if (validator.isValidEmail(email.getText().toString())) {
                 realtimeDatabaseManager.getFirebaseAuth().fetchSignInMethodsForEmail(email.getText().toString()).addOnCompleteListener(task -> {
