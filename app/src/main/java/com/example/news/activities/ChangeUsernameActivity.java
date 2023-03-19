@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -19,7 +18,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
-public class ChangeUsername extends AppCompatActivity {
+public class ChangeUsernameActivity extends AppCompatActivity {
 
     EditText username;
 
@@ -57,16 +56,21 @@ public class ChangeUsername extends AppCompatActivity {
         close = findViewById(R.id.close);
         done = findViewById(R.id.done);
 
+        close.setOnClickListener(v -> {
+            startActivity(new Intent(ChangeUsernameActivity.this, ProfileActivity.class));
+            finish();
+        });
+
         done.setOnClickListener(v -> {
             realtimeDatabaseManager = new RealtimeDatabaseManager();
             Validator validator = new Validator();
             if(validator.isValidUsername(username.getText().toString())){
                 realtimeDatabaseManager.getCurrentUserReference().child("username").setValue(username.getText().toString());
-                startActivity(new Intent(ChangeUsername.this, ProfileActivity.class));
+                startActivity(new Intent(ChangeUsernameActivity.this, ProfileActivity.class));
                 finish();
             }
             else {
-                Toast.makeText(ChangeUsername.this, "Username is not valid!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ChangeUsernameActivity.this, "Username is not valid!", Toast.LENGTH_SHORT).show();
             }
 
         });

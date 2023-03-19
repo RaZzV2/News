@@ -17,6 +17,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.news.RealtimeDatabaseManager;
 import com.example.news.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
@@ -45,18 +47,18 @@ public class ReceiveOtpActivity extends AppCompatActivity {
 
     String resendToken;
 
-    void finishConfirmation(String code)
-    {
+    void finishConfirmation(String code) {
         realtimeDatabaseManager = new RealtimeDatabaseManager();
-        realtimeDatabaseManager.getUsersReference().child(realtimeDatabaseManager.getCurrentUserUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        realtimeDatabaseManager.getUsersReference().child(realtimeDatabaseManager.getCurrentUserUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()){
+                if (snapshot.exists()) {
                     mVerificationId = snapshot.child("otpCode").getValue(String.class);
                     resendToken = snapshot.child("resendCode").getValue(String.class);
                     phoneConfirmation(mVerificationId, code);
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
@@ -64,19 +66,31 @@ public class ReceiveOtpActivity extends AppCompatActivity {
         });
     }
 
-    void phoneConfirmation(String currentOTP, String code){
+    void phoneConfirmation(String currentOTP, String code) {
+        realtimeDatabaseManager = new RealtimeDatabaseManager();
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(currentOTP, code);
         realtimeDatabaseManager.getCurrentUser().linkWithCredential(credential).addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    Toast.makeText(ReceiveOtpActivity.this, "Phone number has been verified!", Toast.LENGTH_SHORT).show();
-                    realtimeDatabaseManager.getCurrentUserConfirmedPhoneReference().setValue(true);
-                    Intent intent = new Intent(getApplicationContext(), ConfirmEmailActivity.class);
-                    startActivity(intent);
-                    finish();
-                } else {
-                    Toast.makeText(ReceiveOtpActivity.this, "The OTP code entered is wrong!", Toast.LENGTH_SHORT).show();
-                }
+            if (task.isSuccessful()) {
+                Toast.makeText(ReceiveOtpActivity.this, "Phone number has been verified!", Toast.LENGTH_SHORT).show();
+                realtimeDatabaseManager.getCurrentUserConfirmedPhoneReference().setValue(true);
+                Intent intent = new Intent(getApplicationContext(), ConfirmEmailActivity.class);
+                startActivity(intent);
+                finish();
+            } else {
+                Toast.makeText(ReceiveOtpActivity.this, "The OTP code entered is wrong!", Toast.LENGTH_SHORT).show();
+            }
         });
+
+        realtimeDatabaseManager.getFirebaseUser().updatePhoneNumber(credential).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Toast.makeText(ReceiveOtpActivity.this, "Phone number has been verified!", Toast.LENGTH_SHORT).show();
+                realtimeDatabaseManager.getCurrentUserConfirmedPhoneReference().setValue(true);
+                Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
     }
 
     void initialize() {
@@ -204,9 +218,9 @@ public class ReceiveOtpActivity extends AppCompatActivity {
 
     }
 
-    void resendCode(){
+    void resendCode() {
         realtimeDatabaseManager = new RealtimeDatabaseManager();
-        realtimeDatabaseManager.getCurrentUserReference().addListenerForSingleValueEvent(new ValueEventListener() {
+        realtimeDatabaseManager.getCurrentUserReference().addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String phoneNumber = snapshot.child("phoneNumber").getValue(String.class);
@@ -223,7 +237,7 @@ public class ReceiveOtpActivity extends AppCompatActivity {
                             }
 
                             @Override
-                            public void onCodeSent (@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken){
+                            public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
                                 realtimeDatabaseManager = new RealtimeDatabaseManager();
                                 realtimeDatabaseManager.getCurrentUserReference().child("otpCode").setValue(s);
                                 Toast.makeText(ReceiveOtpActivity.this, "The code has been sent!", Toast.LENGTH_SHORT).show();
@@ -240,12 +254,12 @@ public class ReceiveOtpActivity extends AppCompatActivity {
         });
     }
 
-    public void startTimer(){
-        CountDownTimer countDownTimer = new CountDownTimer(60000,1000) {
+    public void startTimer() {
+        CountDownTimer countDownTimer = new CountDownTimer(60000, 1000) {
             @SuppressLint("SetTextI18n")
             @Override
             public void onTick(long millisUntilFinished) {
-                resendOTP.setText("RESEND OTP in " + (millisUntilFinished/1000) + " seconds");
+                resendOTP.setText("RESEND OTP in " + (millisUntilFinished / 1000) + " seconds");
             }
 
             @SuppressLint("SetTextI18n")
@@ -257,9 +271,12 @@ public class ReceiveOtpActivity extends AppCompatActivity {
         };
         countDownTimer.start();
     }
+
     @Override
     protected void onStart() {
         super.onStart();
+        realtimeDatabaseManager = new RealtimeDatabaseManager();
+        realtimeDatabaseManager.reload();
         resendOTP.setEnabled(false);
         startTimer();
     }
@@ -290,10 +307,9 @@ public class ReceiveOtpActivity extends AppCompatActivity {
         verifyButton.setOnClickListener(v -> {
             String code = firstButton.getText().toString() + secondButton.getText().toString() + thirdButton.getText().toString()
                     + fourthButton.getText().toString() + fifthButton.getText().toString() + sixthButton.getText().toString();
-            if(code.length() == 6) {
+            if (code.length() == 6) {
                 finishConfirmation(code);
-            }
-            else {
+            } else {
                 Toast.makeText(getApplicationContext(), "The OTP code is not entered correctly", Toast.LENGTH_SHORT).show();
             }
         });

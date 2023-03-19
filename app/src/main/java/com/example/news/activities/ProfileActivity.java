@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -101,8 +100,8 @@ public class ProfileActivity extends AppCompatActivity {
         changePhoneNumberLayout = findViewById(R.id.changePhoneNumberLayout);
 
         changeEmailLayout.setOnClickListener(v -> startActivity(new Intent(ProfileActivity.this, ChangeEmailActivity.class)));
-        changeUsernameLayout.setOnClickListener(v -> startActivity(new Intent(ProfileActivity.this, ChangeUsername.class)));
-        changePhoneNumberLayout.setOnClickListener(v -> startActivity(new Intent(ProfileActivity.this, ChangePhoneNumber.class)));
+        changeUsernameLayout.setOnClickListener(v -> startActivity(new Intent(ProfileActivity.this, ChangeUsernameActivity.class)));
+        changePhoneNumberLayout.setOnClickListener(v -> startActivity(new Intent(ProfileActivity.this, ChangePhoneNumberActivity.class)));
 
         back.setOnClickListener(v -> {
             Intent intent = new Intent(ProfileActivity.this, HomeActivity.class);

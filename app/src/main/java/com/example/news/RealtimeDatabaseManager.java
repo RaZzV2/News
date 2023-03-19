@@ -1,12 +1,22 @@
 package com.example.news;
 
+import androidx.annotation.NonNull;
+
 import com.example.news.classes.UserHelperClass;
+import com.example.news.interfaces.PhoneNumbersCallback;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.SignInMethodQueryResult;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RealtimeDatabaseManager {
     private final FirebaseAuth firebaseAuth;
@@ -16,10 +26,14 @@ public class RealtimeDatabaseManager {
     public FirebaseAuth getFirebaseAuth() {
         return firebaseAuth;
     }
+
     public FirebaseUser getFirebaseUser() {
         return firebaseUser;
     }
-    public FirebaseDatabase getFirebaseDatabase() { return firebaseDatabase; }
+
+    public FirebaseDatabase getFirebaseDatabase() {
+        return firebaseDatabase;
+    }
 
     public RealtimeDatabaseManager() {
         firebaseAuth = FirebaseAuth.getInstance();
@@ -27,18 +41,53 @@ public class RealtimeDatabaseManager {
         firebaseDatabase = FirebaseDatabase.getInstance();
     }
 
-    public String getCurrentUserUid (){
+    public String getCurrentUserUid() {
         return firebaseUser.getUid();
     }
+
     public FirebaseUser getCurrentUser() {
         return firebaseUser;
+    }
+
+    public void getAllPhoneNumbers(PhoneNumbersCallback callback) {
+        DatabaseReference ref = firebaseDatabase.getReference().child("users");
+        List<String> phoneNumbers = new ArrayList<>();
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot1) {
+                for (DataSnapshot childSnapshot : snapshot1.getChildren()) {
+                    String uid = childSnapshot.getKey();
+                    assert uid != null;
+                    DatabaseReference phoneRef = ref.child(uid).child("phoneNumber");
+                    phoneRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            phoneNumbers.add(snapshot.getValue(String.class));
+                            callback.onPhoneNumbersRetrieved(phoneNumbers);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     public void logOut() {
         firebaseAuth.signOut();
     }
 
-    public void reload() {firebaseUser.reload();}
+    public void reload() {
+        firebaseUser.reload();
+    }
 
     public void login(String email, String password, OnCompleteListener<AuthResult> listener) {
         firebaseAuth.signInWithEmailAndPassword(email, password)
@@ -50,11 +99,11 @@ public class RealtimeDatabaseManager {
                 .addOnCompleteListener(listener);
     }
 
-    public void registerToRealtimeDatabase(UserHelperClass userHelperClass, String userId){
+    public void registerToRealtimeDatabase(UserHelperClass userHelperClass, String userId) {
         getUsersReference().child(userId).setValue(userHelperClass);
     }
 
-    public void addPhoneNumberToUser(String phoneNumber){
+    public void addPhoneNumberToUser(String phoneNumber) {
         getUsersReference().child(getCurrentUserUid()).child("phoneNumber").setValue(phoneNumber);
     }
 
@@ -67,31 +116,31 @@ public class RealtimeDatabaseManager {
         getCurrentUserReference().child("image").setValue(downloadURL);
     }
 
-    public DatabaseReference getUsersReference(){
+    public DatabaseReference getUsersReference() {
         return firebaseDatabase.getReference().child("users");
     }
 
-    public DatabaseReference getCurrentUserConfirmedPhoneReference(){
+    public DatabaseReference getCurrentUserConfirmedPhoneReference() {
         return getUsersReference().child(getCurrentUserUid()).child("confirmedPhone");
     }
 
-    public DatabaseReference getCurrentUserOtpCode(){
+    public DatabaseReference getCurrentUserOtpCode() {
         return getUsersReference().child(getCurrentUserUid()).child("otpCode");
     }
 
-    public DatabaseReference getCurrentUserResendCode(){
+    public DatabaseReference getCurrentUserResendCode() {
         return getUsersReference().child(getCurrentUserUid()).child("resendCode");
     }
 
-    public DatabaseReference getOTPReference(){
+    public DatabaseReference getOTPReference() {
         return firebaseDatabase.getReference().child("otp");
     }
 
-    public DatabaseReference getCurrentUserReference(){
+    public DatabaseReference getCurrentUserReference() {
         return getUsersReference().child(getCurrentUserUid());
     }
 
-    public DatabaseReference getCurrentUserPhoneNumberReference(){
+    public DatabaseReference getCurrentUserPhoneNumberReference() {
         return getUsersReference().child(getCurrentUserUid()).child("phoneNumber");
     }
 }

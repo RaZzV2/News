@@ -35,38 +35,67 @@ public class MainActivity extends AppCompatActivity {
     FirebaseAuth firebaseAuth;
 
     TextView forgotPassword;
-    public void onStartVerification(){
-            realtimeDatabaseManager.getCurrentUserConfirmedPhoneReference().addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if (snapshot.exists()) {
-                        Intent intent;
-                        if (Boolean.FALSE.equals(snapshot.getValue(Boolean.class)))
-                            intent = new Intent(getApplicationContext(), SendOtpActivity.class);
-                        else if (!realtimeDatabaseManager.getCurrentUser().isEmailVerified() && realtimeDatabaseManager.getCurrentUser().getEmail() != null) {
-                            intent = new Intent(getApplicationContext(), ConfirmEmailActivity.class);
-                        }
-                        else
-                            intent = new Intent(getApplicationContext(), HomeActivity.class);
-                        startActivity(intent);
-                        finish();
+
+    public void onStartVerification() {
+        realtimeDatabaseManager = new RealtimeDatabaseManager();
+        realtimeDatabaseManager.getUsersReference().child(realtimeDatabaseManager.getCurrentUserUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+
+                    boolean confirmedPhone = Boolean.TRUE.equals(snapshot.child("confirmedPhone").getValue(Boolean.class));
+
+                    if (!snapshot.child("phoneNumber").exists() && !confirmedPhone) {
+                        startActivity(new Intent(getApplicationContext(), SendOtpActivity.class));
+                    } else if (snapshot.child("phoneNumber").exists() && !confirmedPhone) {
+                        startActivity(new Intent(getApplicationContext(), ReceiveOtpActivity.class));
+                    } else if (!realtimeDatabaseManager.getCurrentUser().isEmailVerified() && realtimeDatabaseManager.getCurrentUser().getEmail() != null) {
+                        startActivity(new Intent(getApplicationContext(), ConfirmEmailActivity.class));
+                    } else {
+                        startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                     }
+                    finish();
                 }
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
+            }
 
-                }
-            });
-        }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
 
-    public void authenticate(String emailContent, String passwordContent){
+//            realtimeDatabaseManager.getCurrentUserConfirmedPhoneReference().addValueEventListener(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                    if (snapshot.exists()) {
+//                        Intent intent;
+//                        if (Boolean.FALSE.equals(snapshot.getValue(Boolean.class)))
+//                            intent = new Intent(getApplicationContext(), SendOtpActivity.class);
+//                        else if (!realtimeDatabaseManager.getCurrentUser().isEmailVerified() && realtimeDatabaseManager.getCurrentUser().getEmail() != null) {
+//                            intent = new Intent(getApplicationContext(), ConfirmEmailActivity.class);
+//                        }
+//                        else
+//                            intent = new Intent(getApplicationContext(), HomeActivity.class);
+//                        startActivity(intent);
+//                        finish();
+//                    }
+//                }
+//                @Override
+//                public void onCancelled(@NonNull DatabaseError error) {
+//
+//                }
+//            });
+
+    }
+
+
+    public void authenticate(String emailContent, String passwordContent) {
         realtimeDatabaseManager = new RealtimeDatabaseManager();
         realtimeDatabaseManager.login(emailContent, passwordContent, task -> {
-            if(task.isSuccessful()){
+            if (task.isSuccessful()) {
                 secureAuthenticate();
-            }
-            else{
+            } else {
                 Toast.makeText(getApplicationContext(), "Wrong email or password!", Toast.LENGTH_SHORT).show();
             }
         });
@@ -74,19 +103,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void verifyAuthenticate(DataSnapshot snapshot){
+    public void verifyAuthenticate(DataSnapshot snapshot) {
 
         if (snapshot.hasChild("confirmedPhone") && snapshot.child("confirmedPhone").getValue() != null) {
             boolean numberConfirmationColumnValue = Boolean.TRUE.equals(snapshot.child("confirmedPhone").getValue(Boolean.class));
             Intent intent;
-            if(!numberConfirmationColumnValue){
+            if (!numberConfirmationColumnValue) {
                 intent = new Intent(MainActivity.this, SendOtpActivity.class);
-            }
-            else if(!realtimeDatabaseManager.getCurrentUser().isEmailVerified()){
-                Toast.makeText(MainActivity.this, "Email is not verified!",Toast.LENGTH_SHORT).show();
+            } else if (!realtimeDatabaseManager.getCurrentUser().isEmailVerified()) {
+                Toast.makeText(MainActivity.this, "Email is not verified!", Toast.LENGTH_SHORT).show();
                 intent = new Intent(MainActivity.this, MainActivity.class);
-            }
-            else {
+            } else {
                 intent = new Intent(MainActivity.this, HomeActivity.class);
             }
             startActivity(intent);
@@ -95,16 +122,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void secureAuthenticate(){
+    public void secureAuthenticate() {
         realtimeDatabaseManager = new RealtimeDatabaseManager();
         FirebaseUser currentUser = realtimeDatabaseManager.getCurrentUser();
-        if(currentUser != null){
+        if (currentUser != null) {
             DatabaseReference currentUserDatabase = realtimeDatabaseManager.getCurrentUserReference();
             currentUserDatabase.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     verifyAuthenticate(snapshot);
                 }
+
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
                     Log.e("TAG", error.getMessage(), error.toException());
@@ -118,11 +146,12 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         realtimeDatabaseManager = new RealtimeDatabaseManager();
         FirebaseUser currentUser = realtimeDatabaseManager.getCurrentUser();
-        if(currentUser != null) {
+        if (currentUser != null) {
             realtimeDatabaseManager.reload();
             onStartVerification();
         }
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -142,19 +171,19 @@ public class MainActivity extends AppCompatActivity {
         });
 
         loginButton.setOnClickListener(v -> {
-                if(isButtonClickable) {
-                    String emailContent = email.getText().toString();
-                    String passwordContent = password.getText().toString();
-                    if (TextUtils.isEmpty(emailContent)) {
-                        Toast.makeText(this, "Email can't be empty!", Toast.LENGTH_SHORT).show();
-                    } else if (TextUtils.isEmpty(passwordContent)) {
-                        Toast.makeText(this, "Password can't be empty!", Toast.LENGTH_SHORT).show();
-                    } else {
-                        authenticate(emailContent, passwordContent);
-                    }
-                    isButtonClickable = false;
-                    new Handler().postDelayed(() -> isButtonClickable = true, 2000);
+            if (isButtonClickable) {
+                String emailContent = email.getText().toString();
+                String passwordContent = password.getText().toString();
+                if (TextUtils.isEmpty(emailContent)) {
+                    Toast.makeText(this, "Email can't be empty!", Toast.LENGTH_SHORT).show();
+                } else if (TextUtils.isEmpty(passwordContent)) {
+                    Toast.makeText(this, "Password can't be empty!", Toast.LENGTH_SHORT).show();
+                } else {
+                    authenticate(emailContent, passwordContent);
                 }
+                isButtonClickable = false;
+                new Handler().postDelayed(() -> isButtonClickable = true, 2000);
+            }
         });
 
         forgotPassword.setOnClickListener(v -> {
