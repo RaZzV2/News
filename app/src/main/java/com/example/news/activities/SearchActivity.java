@@ -3,8 +3,12 @@ package com.example.news.activities;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,12 +22,13 @@ import com.example.news.ApiClient;
 import com.example.news.ApiInterface;
 import com.example.news.R;
 import com.example.news.Utils;
-import com.example.news.classes.Article;
-import com.example.news.classes.News;
+import com.example.news.models.Article;
+import com.example.news.models.News;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.logging.Logger;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -43,18 +48,17 @@ public class SearchActivity extends AppCompatActivity {
 
     public void loadJson() {
         ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
-        String country = Utils.getCountry();
-        Call<News> call = apiInterface.getNews(country, API_KEY);
+        Call<News> call = apiInterface.getNews("title:" + searchBar.getText().toString());
 
         call.enqueue(new Callback<News>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onResponse(@NonNull Call<News> call, @NonNull Response<News> response) {
-                if(response.isSuccessful() && Objects.requireNonNull(response.body()).getArticleList() != null) {
+                if(response.isSuccessful() && Objects.requireNonNull(response.body()).getHits() != null) {
                     if(!articleList.isEmpty()){
                         articleList.clear();
                     }
-                    articleList = response.body().getArticleList();
+                    articleList = response.body().getHits().getArticleList();
                     adapter = new Adapter(articleList, SearchActivity.this);
                     recyclerView.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
@@ -86,7 +90,14 @@ public class SearchActivity extends AppCompatActivity {
         back = findViewById(R.id.back);
         searchBar = findViewById(R.id.searchBar);
         searchBar.requestFocus();
-        loadJson();
+
+        searchBar.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                loadJson();
+                return true;
+            }
+            return false;
+        });
 
         back.setOnClickListener(v -> {
             Intent intent = new Intent(SearchActivity.this, HomeActivity.class);

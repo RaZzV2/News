@@ -24,7 +24,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.example.news.activities.WebViewActivity;
-import com.example.news.classes.Article;
+import com.example.news.models.Article;
 import com.example.news.interfaces.OnItemClickListener;
 
 import java.util.List;
@@ -61,7 +61,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.MyViewHolder> {
         requestOptions.centerCrop();
 
         Glide.with(context)
-                .load(model.getUrlToImage())
+                .load(model.getSource().getUrlToImage())
                 .apply(requestOptions)
                 .listener(new RequestListener<Drawable>() {
                     @Override
@@ -77,12 +77,12 @@ public class Adapter extends RecyclerView.Adapter<Adapter.MyViewHolder> {
                     }
                 }).transition(DrawableTransitionOptions.withCrossFade())
                 .into(holder.imageView);
-        holder.title.setText(model.getTitle());
-        holder.description.setText(model.getDescription());
-        holder.source.setText(model.getSource().getName());
-        holder.time.setText("\u2022" + Utils.DateToTimeFormat(model.getPublishedAt()));
-        holder.author.setText(model.getAuthor());
-        holder.title.setTag(model.getUrl());
+        holder.title.setText(model.getSource().getTitle());
+        holder.description.setText(model.getSource().getDescription());
+        holder.source.setText(model.getSource().getSourceSite().getName());
+        holder.time.setText("\u2022" + Utils.DateToTimeFormat(model.getSource().getPublishedAt()));
+        holder.author.setText(model.getSource().getAuthor());
+        holder.title.setTag(model.getSource().getUrl());
 
 
     }

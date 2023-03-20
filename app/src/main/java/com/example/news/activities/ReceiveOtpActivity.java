@@ -49,7 +49,7 @@ public class ReceiveOtpActivity extends AppCompatActivity {
 
     void finishConfirmation(String code) {
         realtimeDatabaseManager = new RealtimeDatabaseManager();
-        realtimeDatabaseManager.getUsersReference().child(realtimeDatabaseManager.getCurrentUserUid()).addValueEventListener(new ValueEventListener() {
+        realtimeDatabaseManager.getUsersReference().child(realtimeDatabaseManager.getCurrentUserUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
@@ -67,31 +67,46 @@ public class ReceiveOtpActivity extends AppCompatActivity {
     }
 
     void phoneConfirmation(String currentOTP, String code) {
+
+
         realtimeDatabaseManager = new RealtimeDatabaseManager();
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(currentOTP, code);
-        realtimeDatabaseManager.getCurrentUser().linkWithCredential(credential).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Toast.makeText(ReceiveOtpActivity.this, "Phone number has been verified!", Toast.LENGTH_SHORT).show();
-                realtimeDatabaseManager.getCurrentUserConfirmedPhoneReference().setValue(true);
-                Intent intent = new Intent(getApplicationContext(), ConfirmEmailActivity.class);
-                startActivity(intent);
-                finish();
-            } else {
-                Toast.makeText(ReceiveOtpActivity.this, "The OTP code entered is wrong!", Toast.LENGTH_SHORT).show();
+
+        realtimeDatabaseManager.getCurrentUserReference().child("alreadyLinked").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists() && Boolean.TRUE.equals(snapshot.getValue(Boolean.class))){
+                    realtimeDatabaseManager.getFirebaseUser().updatePhoneNumber(credential).addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(ReceiveOtpActivity.this, "Phone number has been verified!", Toast.LENGTH_SHORT).show();
+                            realtimeDatabaseManager.getCurrentUserConfirmedPhoneReference().setValue(true);
+                            Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    });
+                }
+                else {
+                    realtimeDatabaseManager.getCurrentUser().linkWithCredential(credential).addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(ReceiveOtpActivity.this, "Phone number has been verified!", Toast.LENGTH_SHORT).show();
+                            realtimeDatabaseManager.getCurrentUserConfirmedPhoneReference().setValue(true);
+                            Intent intent = new Intent(getApplicationContext(), ConfirmEmailActivity.class);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            Toast.makeText(ReceiveOtpActivity.this, "The OTP code entered is wrong!", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
-
-        realtimeDatabaseManager.getFirebaseUser().updatePhoneNumber(credential).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Toast.makeText(ReceiveOtpActivity.this, "Phone number has been verified!", Toast.LENGTH_SHORT).show();
-                realtimeDatabaseManager.getCurrentUserConfirmedPhoneReference().setValue(true);
-                Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
-
-    }
+        }
 
     void initialize() {
         firstButton.requestFocus();

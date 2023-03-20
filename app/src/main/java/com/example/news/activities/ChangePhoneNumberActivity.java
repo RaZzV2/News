@@ -115,8 +115,11 @@ public class ChangePhoneNumberActivity extends AppCompatActivity {
                     } else {
                         realtimeDatabaseManager.getCurrentUserReference().child("phoneNumber").setValue(phoneContent);
                         realtimeDatabaseManager.getCurrentUserReference().child("confirmedPhone").setValue(false);
+                        realtimeDatabaseManager.getCurrentUserReference().child("alreadyLinked").setValue(true);
                         sendConfirmationCode(phoneContent);
-                        startActivity(new Intent(ChangePhoneNumberActivity.this, ReceiveOtpActivity.class));
+
+                        Intent intent = new Intent(ChangePhoneNumberActivity.this, ReceiveOtpActivity.class);
+                        startActivity(intent);
                         finish();
                     }
                 });

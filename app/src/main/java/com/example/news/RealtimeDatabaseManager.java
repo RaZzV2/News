@@ -52,7 +52,7 @@ public class RealtimeDatabaseManager {
     public void getAllPhoneNumbers(PhoneNumbersCallback callback) {
         DatabaseReference ref = firebaseDatabase.getReference().child("users");
         List<String> phoneNumbers = new ArrayList<>();
-        ref.addValueEventListener(new ValueEventListener() {
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot1) {
                 for (DataSnapshot childSnapshot : snapshot1.getChildren()) {
