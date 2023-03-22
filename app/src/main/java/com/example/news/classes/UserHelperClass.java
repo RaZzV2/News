@@ -2,13 +2,12 @@ package com.example.news.classes;
 
 public class UserHelperClass {
     String email, username, password;
-    boolean isConfirmedPhone, isConfirmedEmail;
+    boolean isConfirmedPhone;
 
-    public UserHelperClass(String email, String username, boolean isConfirmedPhone, boolean isConfirmedEmail) {
+    public UserHelperClass(String email, String username, boolean isConfirmedPhone) {
         this.email = email;
         this.username = username;
         this.isConfirmedPhone = isConfirmedPhone;
-        this.isConfirmedEmail = isConfirmedEmail;
     }
 
     public boolean isConfirmedPhone() {
@@ -17,14 +16,6 @@ public class UserHelperClass {
 
     public void setConfirmedPhone(boolean confirmedPhone) {
         isConfirmedPhone = confirmedPhone;
-    }
-
-    public boolean isConfirmedEmail() {
-        return isConfirmedEmail;
-    }
-
-    public void setConfirmedEmail(boolean confirmedEmail) {
-        isConfirmedEmail = confirmedEmail;
     }
 
     public UserHelperClass() {

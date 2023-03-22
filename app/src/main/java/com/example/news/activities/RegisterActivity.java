@@ -14,6 +14,7 @@ import com.example.news.RealtimeDatabaseManager;
 import com.example.news.R;
 import com.example.news.classes.UserHelperClass;
 import com.example.news.classes.Validator;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -25,6 +26,8 @@ public class RegisterActivity extends AppCompatActivity {
     RealtimeDatabaseManager realtimeDatabaseManager;
 
     boolean isButtonClickable = true;
+
+    FirebaseAnalytics mFirebaseAnalytics;
     EditText email;
     EditText username;
     EditText password;
@@ -33,64 +36,64 @@ public class RegisterActivity extends AppCompatActivity {
 
     TextView alreadyHaveAnAccount;
 
-    public void mailDuplicateVerification(String emailContent, String passwordContent, String usernameContent){
+    public void mailDuplicateVerification(String emailContent, String passwordContent, String usernameContent) {
         realtimeDatabaseManager = new RealtimeDatabaseManager();
         realtimeDatabaseManager.getFirebaseAuth().fetchSignInMethodsForEmail(emailContent).addOnCompleteListener(task -> {
-            if(task.isSuccessful()){
+            if (task.isSuccessful()) {
                 List<String> signInMethods = task.getResult().getSignInMethods();
                 if (signInMethods == null || signInMethods.isEmpty()) {
-                    createAccount(emailContent,passwordContent,usernameContent);
+                    createAccount(emailContent, passwordContent, usernameContent);
                 } else {
                     Toast.makeText(RegisterActivity.this, "This email is already in use!", Toast.LENGTH_SHORT).show();
                 }
-            }
-            else {
+            } else {
                 Toast.makeText(RegisterActivity.this, "Error occurred while checking email!", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    public void createAccount(String emailContent, String passwordContent, String usernameContent){
-        final UserHelperClass userHelperClass = new UserHelperClass(emailContent, usernameContent, false, false);
+    public void createAccount(String emailContent, String passwordContent, String usernameContent) {
+        final UserHelperClass userHelperClass = new UserHelperClass(emailContent, usernameContent, false);
         realtimeDatabaseManager = new RealtimeDatabaseManager();
         realtimeDatabaseManager.register(emailContent, passwordContent, task -> {
-            if(task.isSuccessful()){
+            if (task.isSuccessful()) {
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                if(user != null){
-                        String userId = Objects.requireNonNull(task.getResult().getUser()).getUid();
-                        realtimeDatabaseManager.registerToRealtimeDatabase(userHelperClass, userId);
-                        Intent intent = new Intent(getApplicationContext(), SendOtpActivity.class);
-                        startActivity(intent);
-                    }
+                if (user != null) {
+                    String userId = Objects.requireNonNull(task.getResult().getUser()).getUid();
+                    realtimeDatabaseManager.registerToRealtimeDatabase(userHelperClass, userId);
+                    Intent intent = new Intent(getApplicationContext(), SendOtpActivity.class);
+                    mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+                    Bundle bundle = new Bundle();
+                    bundle.putString(FirebaseAnalytics.Param.METHOD, "google");
+                    mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SIGN_UP, bundle);
+                    startActivity(intent);
+                    finish();
                 }
-            else {
+            } else {
                 Toast.makeText(RegisterActivity.this, "Registration failed!", Toast.LENGTH_SHORT).show();
             }
         });
     }
-    public void checkValidatorsAndCreateAccount(String emailContent, String passwordContent, String usernameContent){
+
+    public void checkValidatorsAndCreateAccount(String emailContent, String passwordContent, String usernameContent) {
         Validator validator = new Validator();
 
         if (!validator.isValidEmail(emailContent)) {
             Toast.makeText(this, "This email is invalid", Toast.LENGTH_SHORT).show();
-        }
-
-        else if (!validator.isValidUsername(usernameContent)) {
+        } else if (!validator.isValidUsername(usernameContent)) {
             Toast.makeText(this, "This username is invalid", Toast.LENGTH_SHORT).show();
             username.setError("The username:\n" +
                     "- It must start with a letter\n" +
                     "- It must have between 4 and 20 characters\n" +
                     "- Can also contain numbers");
-        }
-        else if (!validator.isValidPassword(passwordContent)) {
+        } else if (!validator.isValidPassword(passwordContent)) {
             Toast.makeText(this, "This password is invalid", Toast.LENGTH_SHORT).show();
             password.setError("The password\n" +
                     "- Must have at least 8 characters\n" +
                     "- Must contain at least one symbol\n" +
                     "- Must have at least one capital letter\n" +
                     "- Must contain at least one number");
-        }
-        else mailDuplicateVerification(emailContent ,passwordContent ,usernameContent);
+        } else mailDuplicateVerification(emailContent, passwordContent, usernameContent);
     }
 
     @Override
@@ -107,7 +110,7 @@ public class RegisterActivity extends AppCompatActivity {
         alreadyHaveAnAccount = findViewById(R.id.alreadyHaveAnAccount);
 
         registerButton.setOnClickListener(v -> {
-            if(isButtonClickable) {
+            if (isButtonClickable) {
                 final String emailContent = email.getText().toString();
                 final String usernameContent = username.getText().toString();
                 final String passwordContent = password.getText().toString();

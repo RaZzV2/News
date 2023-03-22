@@ -84,6 +84,9 @@ public class ReceiveOtpActivity extends AppCompatActivity {
                             startActivity(intent);
                             finish();
                         }
+                        else {
+                            Toast.makeText(ReceiveOtpActivity.this, "The OTP code entered is wrong!", Toast.LENGTH_SHORT).show();
+                        }
                     });
                 }
                 else {

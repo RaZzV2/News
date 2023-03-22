@@ -27,8 +27,6 @@ public class HomeActivity extends AppCompatActivity {
 
     RealtimeDatabaseManager realtimeDatabaseManager;
 
-    TextView welcomeTitle;
-
     TextView searchBar;
 
     ImageView profilePicture;
@@ -101,6 +99,10 @@ public class HomeActivity extends AppCompatActivity {
                 case R.id.menuProfile:
                     intent = new Intent(this, ProfileActivity.class);
                     startActivity(intent);
+                    break;
+
+                case R.id.menuAnalytics:
+                    startActivity(new Intent(this, AnalyticsActivity.class));
                     break;
 
             }

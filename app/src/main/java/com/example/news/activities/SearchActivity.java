@@ -91,10 +91,10 @@ public class SearchActivity extends AppCompatActivity {
         searchBar.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 loadJson();
-                mFirebaseAnalytics = FirebaseAnalytics.getInstance(SearchActivity.this);
-                Bundle bundle = new Bundle();
-                bundle.putString("searched_item", searchBar.getText().toString());
-                mFirebaseAnalytics.logEvent("searched_item_event", bundle);
+//                mFirebaseAnalytics = FirebaseAnalytics.getInstance(SearchActivity.this);
+//                Bundle bundle = new Bundle();
+//                bundle.putString("searched_item", searchBar.getText().toString());
+//                mFirebaseAnalytics.logEvent("searched_item_event", bundle);
                 return true;
             }
             return false;
