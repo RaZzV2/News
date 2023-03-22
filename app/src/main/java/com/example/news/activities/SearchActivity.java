@@ -3,12 +3,9 @@ package com.example.news.activities;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,14 +18,13 @@ import com.example.news.Adapter;
 import com.example.news.ApiClient;
 import com.example.news.ApiInterface;
 import com.example.news.R;
-import com.example.news.Utils;
 import com.example.news.models.Article;
 import com.example.news.models.News;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.logging.Logger;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -36,10 +32,11 @@ import retrofit2.Response;
 
 public class SearchActivity extends AppCompatActivity {
 
-    public static final String API_KEY = "b6f70243230a4674a4df8612f71fa0e8";
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
     private List<Article> articleList = new ArrayList<>();
+
+    FirebaseAnalytics mFirebaseAnalytics;
     Adapter adapter;
 
     ImageView back;
@@ -94,6 +91,10 @@ public class SearchActivity extends AppCompatActivity {
         searchBar.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 loadJson();
+                mFirebaseAnalytics = FirebaseAnalytics.getInstance(SearchActivity.this);
+                Bundle bundle = new Bundle();
+                bundle.putString("searched_item", searchBar.getText().toString());
+                mFirebaseAnalytics.logEvent("searched_item_event", bundle);
                 return true;
             }
             return false;

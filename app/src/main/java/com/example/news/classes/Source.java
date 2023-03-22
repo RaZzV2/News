@@ -4,8 +4,6 @@ import com.example.news.models.SourceSite;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Date;
-
 public class Source {
     @Expose
     @SerializedName("country")
