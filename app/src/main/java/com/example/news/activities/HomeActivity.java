@@ -117,9 +117,11 @@ public class HomeActivity extends AppCompatActivity {
         realtimeDatabaseManager.getCurrentUserReference().child("image").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Glide.with(HomeActivity.this)
-                        .load(snapshot.getValue(String.class))
-                        .into(profilePicture);
+                if(snapshot.exists()) {
+                    Glide.with(HomeActivity.this)
+                            .load(snapshot.getValue(String.class))
+                            .into(profilePicture);
+                }
             }
 
             @Override

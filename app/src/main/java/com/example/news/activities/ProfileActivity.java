@@ -42,7 +42,6 @@ public class ProfileActivity extends AppCompatActivity {
     LinearLayout changePhoneNumberLayout;
 
 
-
     void initialize() {
         realtimeDatabaseManager = new RealtimeDatabaseManager();
         changeEmail.setHint(realtimeDatabaseManager.getCurrentUser().getEmail());
@@ -62,10 +61,12 @@ public class ProfileActivity extends AppCompatActivity {
         realtimeDatabaseManager.getCurrentUserReference().child("image").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(!isDestroyed()) {
-                    Glide.with(ProfileActivity.this)
-                            .load(snapshot.getValue(String.class))
-                            .into(changeProfilePicture);
+                if (snapshot.exists()) {
+                    if (!isDestroyed()) {
+                        Glide.with(ProfileActivity.this)
+                                .load(snapshot.getValue(String.class))
+                                .into(changeProfilePicture);
+                    }
                 }
             }
 
