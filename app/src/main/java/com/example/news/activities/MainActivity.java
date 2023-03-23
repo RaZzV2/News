@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.news.RealtimeDatabaseManager;
 import com.example.news.R;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -30,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
     EditText email;
     EditText password;
     Button loginButton;
+
+    FirebaseAnalytics mFirebaseAnalytics;
 
     TextView newUser;
     FirebaseAuth firebaseAuth;
@@ -114,6 +117,10 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "Email is not verified!", Toast.LENGTH_SHORT).show();
                 intent = new Intent(MainActivity.this, MainActivity.class);
             } else {
+                mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.METHOD, "login");
+                mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, bundle);
                 intent = new Intent(MainActivity.this, HomeActivity.class);
             }
             startActivity(intent);
