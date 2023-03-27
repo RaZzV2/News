@@ -74,4 +74,5 @@
     <string name="new_email">New email</string>
     <string name="change_phone_number">Change phone number</string>
     <string name="total_news_language">Total news language</string>
+    <string name="total_news_categories">Total News Categories</string>
 </resources>

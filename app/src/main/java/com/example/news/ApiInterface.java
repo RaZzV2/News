@@ -3,7 +3,11 @@ package com.example.news;
 import com.example.news.models.CountryCountModel.CountryRequestBody;
 import com.example.news.models.CountryCountModel.CountryResult;
 import com.example.news.models.NewsModel.News;
+import com.example.news.models.SearchLog;
 
+import org.json.JSONObject;
+
+import okhttp3.Response;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -19,5 +23,8 @@ public interface ApiInterface {
 
     @POST("news_articles/_search?size=0")
     Call<CountryResult> getCountryResult(@Body CountryRequestBody body);
+
+    @POST("search_history/_doc")
+    Call<JSONObject> logSearch(@Body SearchLog searchLog);
 
 }
