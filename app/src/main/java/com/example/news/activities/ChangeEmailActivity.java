@@ -78,9 +78,10 @@ public class ChangeEmailActivity extends AppCompatActivity {
                             realtimeDatabaseManager.getCurrentUser().updateEmail(email.getText().toString().trim()).addOnCompleteListener(secondaryTask -> {
                                    if(secondaryTask.isSuccessful()){
                                        realtimeDatabaseManager.getCurrentUserReference().child("email").setValue(email.getText().toString());
+
+                                       Toast.makeText(getApplicationContext(), "Email has been changed successfully!", Toast.LENGTH_SHORT).show();
                                        startActivity(new Intent(ChangeEmailActivity.this, MainActivity.class));
                                        finish();
-                                       Toast.makeText(getApplicationContext(), "Email has been changed successfully!", Toast.LENGTH_SHORT).show();
                                        realtimeDatabaseManager.logOut();
                                    }
                                    else {

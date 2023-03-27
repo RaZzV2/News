@@ -18,8 +18,8 @@ import com.example.news.Adapter;
 import com.example.news.ApiClient;
 import com.example.news.ApiInterface;
 import com.example.news.R;
-import com.example.news.models.Article;
-import com.example.news.models.News;
+import com.example.news.models.NewsModel.Article;
+import com.example.news.models.NewsModel.News;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;

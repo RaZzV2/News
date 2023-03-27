@@ -1,9 +1,8 @@
-package com.example.news.models;
+package com.example.news.models.NewsModel;
 
+import com.example.news.models.NewsModel.Hits;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
-import java.util.List;
 
 public class News {
 

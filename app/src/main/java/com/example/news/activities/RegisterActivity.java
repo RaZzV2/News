@@ -27,7 +27,6 @@ public class RegisterActivity extends AppCompatActivity {
 
     boolean isButtonClickable = true;
 
-    FirebaseAnalytics mFirebaseAnalytics;
     EditText email;
     EditText username;
     EditText password;
@@ -62,10 +61,6 @@ public class RegisterActivity extends AppCompatActivity {
                     String userId = Objects.requireNonNull(task.getResult().getUser()).getUid();
                     realtimeDatabaseManager.registerToRealtimeDatabase(userHelperClass, userId);
                     Intent intent = new Intent(getApplicationContext(), SendOtpActivity.class);
-                    mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-                    Bundle bundle = new Bundle();
-                    bundle.putString(FirebaseAnalytics.Param.METHOD, "google");
-                    mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SIGN_UP, bundle);
                     startActivity(intent);
                     finish();
                 }

@@ -1,5 +1,7 @@
 package com.example.news.activities;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,6 +17,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.news.RealtimeDatabaseManager;
 import com.example.news.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -22,6 +26,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -66,29 +71,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-
-//            realtimeDatabaseManager.getCurrentUserConfirmedPhoneReference().addValueEventListener(new ValueEventListener() {
-//                @Override
-//                public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                    if (snapshot.exists()) {
-//                        Intent intent;
-//                        if (Boolean.FALSE.equals(snapshot.getValue(Boolean.class)))
-//                            intent = new Intent(getApplicationContext(), SendOtpActivity.class);
-//                        else if (!realtimeDatabaseManager.getCurrentUser().isEmailVerified() && realtimeDatabaseManager.getCurrentUser().getEmail() != null) {
-//                            intent = new Intent(getApplicationContext(), ConfirmEmailActivity.class);
-//                        }
-//                        else
-//                            intent = new Intent(getApplicationContext(), HomeActivity.class);
-//                        startActivity(intent);
-//                        finish();
-//                    }
-//                }
-//                @Override
-//                public void onCancelled(@NonNull DatabaseError error) {
-//
-//                }
-//            });
 
     }
 

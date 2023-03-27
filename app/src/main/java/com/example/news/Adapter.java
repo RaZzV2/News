@@ -24,7 +24,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.example.news.activities.WebViewActivity;
-import com.example.news.models.Article;
+import com.example.news.models.NewsModel.Article;
 import com.example.news.interfaces.OnItemClickListener;
 
 import java.util.List;

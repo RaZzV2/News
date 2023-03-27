@@ -1,32 +1,96 @@
 package com.example.news.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
+import static android.content.ContentValues.TAG;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.view.View;
+import android.util.Log;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.news.ApiClient;
+import com.example.news.ApiInterface;
 import com.example.news.R;
+import com.example.news.models.CountryCountModel.Bucket;
+import com.example.news.models.CountryCountModel.CountryRequestBody;
+import com.example.news.models.CountryCountModel.CountryResult;
+import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.google.cloud.bigquery.BigQuery;
-import com.google.cloud.bigquery.BigQueryOptions;
-import com.google.cloud.bigquery.QueryJobConfiguration;
-import com.google.firebase.analytics.FirebaseAnalytics;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class AnalyticsActivity extends AppCompatActivity {
 
     ImageView back;
 
-    LineChart chart;
+    PieChart chart;
 
-    FirebaseAnalytics mFirebaseAnalytics;
+    List<Bucket> countriesNewsList;
+
+    List<PieEntry> countryEntries;
+
+
+    public void createCountriesChart() {
+        ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
+        CountryRequestBody.Aggs.Types.Terms terms = new CountryRequestBody.Aggs.Types.Terms("country.keyword");
+        CountryRequestBody.Aggs.Types types = new CountryRequestBody.Aggs.Types(terms);
+        CountryRequestBody.Aggs aggs = new CountryRequestBody.Aggs(types);
+        CountryRequestBody requestBody = new CountryRequestBody(aggs);
+        Call<CountryResult> call = apiInterface.getCountryResult(requestBody);
+        call.enqueue(new Callback<CountryResult>() {
+            @Override
+            public void onResponse(@NonNull Call<CountryResult> call, @NonNull Response<CountryResult> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    countriesNewsList = response.body().getAggregations().getTypes().getBuckets();
+                    for(Bucket buckets : countriesNewsList) {
+                        countryEntries.add(new PieEntry(buckets.getDoc_count(), buckets.getKey()));
+                    }
+                    PieDataSet dataSet = new PieDataSet(countryEntries, "Countries News Label");
+                    dataSet.setSliceSpace(3f);
+                    dataSet.setSelectionShift(5f);
+                    dataSet.setColors(ColorTemplate.VORDIPLOM_COLORS);
+
+
+                    PieData data = new PieData(dataSet);
+                    data.setValueTextSize(10f);
+                    data.setValueTextColor(Color.YELLOW);
+                    chart.setData(data);
+
+                    chart.setCenterText("News Countries Chart");
+                    chart.setCenterTextSize(16f);
+                    chart.getLegend().setEnabled(false);
+                    chart.getDescription().setEnabled(false);
+                    chart.animateY(1000, Easing.EaseInOutCubic);
+                    chart.invalidate();
+
+                } else {
+                    Toast.makeText(AnalyticsActivity.this, "No result!", Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override
+            public void onFailure(@NonNull Call<CountryResult> call, @NonNull Throwable t) {
+                // Handle failure
+            }
+        });
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,25 +99,14 @@ public class AnalyticsActivity extends AppCompatActivity {
 
         back = findViewById(R.id.back);
         chart = findViewById(R.id.chart);
+        countriesNewsList = new ArrayList<>();
+        countryEntries = new ArrayList<>();
 
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-        Bundle bundle = new Bundle();
-        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Country");
-        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+        createCountriesChart();
+        
 
 
-        List<Entry> entries = new ArrayList<>();
-        entries.add(new Entry(1, 10));
-        entries.add(new Entry(2, 20));
-        entries.add(new Entry(3, 30));
-        entries.add(new Entry(4, 25));
-        entries.add(new Entry(5, 15));
 
-        LineDataSet dataSet = new LineDataSet(entries, "Dataset label");
-        LineData lineData = new LineData(dataSet);
-        chart.setData(lineData);
-
-        chart.invalidate();
 
         back.setOnClickListener(v -> {
             startActivity(new Intent(AnalyticsActivity.this, HomeActivity.class));

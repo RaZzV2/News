@@ -1,6 +1,6 @@
 package com.example.news.classes;
 
-import com.example.news.models.SourceSite;
+import com.example.news.models.NewsModel.SourceSite;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
