@@ -27,12 +27,14 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import retrofit2.Call;
@@ -92,7 +94,11 @@ public class SearchActivity extends AppCompatActivity {
                 SearchLog searchLog = new SearchLog();
                 searchLog.setUid(realtimeDatabaseManager.getCurrentUserUid());
                 searchLog.setQuery(word);
-                searchLog.setDate(Calendar.getInstance().getTime());
+
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.UK);
+                String formattedDate = sdf.format(Calendar.getInstance().getTime());
+
+                searchLog.setDate(formattedDate);
                 Call<JSONObject> call = apiInterface.logSearch(searchLog);
 
                 call.enqueue(new Callback<JSONObject>() {

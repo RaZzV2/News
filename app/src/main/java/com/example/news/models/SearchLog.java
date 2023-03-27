@@ -8,6 +8,7 @@ import com.google.gson.annotations.SerializedName;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class SearchLog {
 
@@ -17,7 +18,7 @@ public class SearchLog {
 
     @SerializedName("date")
     @Expose
-    Date date;
+    String date;
 
     @SerializedName("query")
     @Expose
@@ -32,12 +33,10 @@ public class SearchLog {
     }
 
     public String getDate() {
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-        isoFormat.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
-        return isoFormat.format(date);
+        return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
