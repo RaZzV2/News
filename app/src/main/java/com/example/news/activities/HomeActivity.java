@@ -14,7 +14,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.bumptech.glide.Glide;
-import com.example.news.RealtimeDatabaseManager;
+import com.example.news.firebasemanager.RealtimeDatabaseManager;
 import com.example.news.R;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.database.DataSnapshot;

@@ -6,26 +6,22 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.news.R;
-import com.example.news.RealtimeDatabaseManager;
+import com.example.news.firebasemanager.RealtimeDatabaseManager;
 import com.example.news.classes.Validator;
-import com.example.news.interfaces.PhoneNumbersCallback;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
-import com.google.firebase.auth.SignInMethodQueryResult;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class ChangePhoneNumberActivity extends AppCompatActivity {

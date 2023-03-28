@@ -1,4 +1,4 @@
-package com.example.news;
+package com.example.news.api;
 
 import android.annotation.SuppressLint;
 

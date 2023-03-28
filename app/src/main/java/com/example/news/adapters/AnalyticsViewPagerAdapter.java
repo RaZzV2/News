@@ -1,16 +1,17 @@
-package com.example.news.models;
+package com.example.news.adapters;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.example.news.AllStatisticsFragment;
+import com.example.news.fragments.AllStatisticsFragment;
+import com.example.news.fragments.MyStatisticsFragment;
 
-public class MyViewPagerAdapter extends FragmentStateAdapter {
+public class AnalyticsViewPagerAdapter extends FragmentStateAdapter {
 
 
-    public MyViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
+    public AnalyticsViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
     }
 

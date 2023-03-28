@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.news.R;
-import com.example.news.RealtimeDatabaseManager;
+import com.example.news.firebasemanager.RealtimeDatabaseManager;
 import com.example.news.classes.Validator;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

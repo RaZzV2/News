@@ -10,11 +10,10 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.news.RealtimeDatabaseManager;
+import com.example.news.firebasemanager.RealtimeDatabaseManager;
 import com.example.news.R;
 import com.example.news.classes.UserHelperClass;
 import com.example.news.classes.Validator;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 

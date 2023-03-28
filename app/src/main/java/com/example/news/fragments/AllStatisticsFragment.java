@@ -1,20 +1,18 @@
-package com.example.news;
+package com.example.news.fragments;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-
-import com.example.news.activities.AnalyticsActivity;
-import com.example.news.activities.HomeActivity;
-import com.example.news.models.CountryCountModel.Bucket;
+import com.example.news.api.ApiClient;
+import com.example.news.api.ApiInterface;
+import com.example.news.R;
+import com.example.news.models.Bucket;
 import com.example.news.models.CountryCountModel.CountryRequestBody;
 import com.example.news.models.CountryCountModel.CountryResult;
 import com.github.mikephil.charting.animation.Easing;
@@ -32,8 +30,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class AllStatisticsFragment extends Fragment {
-
-    ImageView back;
 
     PieChart languageNews;
 
@@ -88,7 +84,6 @@ public class AllStatisticsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_all_statistics, container, false);
 
-        back = view.findViewById(R.id.back);
         languageNews = view.findViewById(R.id.chart);
         categoriesNews = view.findViewById(R.id.chart1);
 

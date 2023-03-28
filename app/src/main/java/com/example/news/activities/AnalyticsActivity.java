@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.news.R;
-import com.example.news.models.MyViewPagerAdapter;
+import com.example.news.adapters.AnalyticsViewPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.Objects;
@@ -17,7 +17,7 @@ public class AnalyticsActivity extends AppCompatActivity {
 
     TabLayout tabLayout;
     ViewPager2 viewPager2;
-    MyViewPagerAdapter myViewPagerAdapter;
+    AnalyticsViewPagerAdapter analyticsViewPagerAdapter;
 
     ImageView back;
 
@@ -29,9 +29,9 @@ public class AnalyticsActivity extends AppCompatActivity {
         back = findViewById(R.id.back);
         tabLayout = findViewById(R.id.tab_layout);
         viewPager2 = findViewById(R.id.view_pager);
-        myViewPagerAdapter = new MyViewPagerAdapter(this);
+        analyticsViewPagerAdapter = new AnalyticsViewPagerAdapter(this);
 
-        viewPager2.setAdapter(myViewPagerAdapter);
+        viewPager2.setAdapter(analyticsViewPagerAdapter);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {

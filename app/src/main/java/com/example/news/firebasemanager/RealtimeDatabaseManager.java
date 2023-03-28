@@ -1,4 +1,4 @@
-package com.example.news;
+package com.example.news.firebasemanager;
 
 import androidx.annotation.NonNull;
 

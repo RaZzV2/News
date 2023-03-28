@@ -9,7 +9,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.news.RealtimeDatabaseManager;
+import com.example.news.firebasemanager.RealtimeDatabaseManager;
 import com.example.news.R;
 import com.example.news.classes.Validator;
 import com.google.firebase.FirebaseException;

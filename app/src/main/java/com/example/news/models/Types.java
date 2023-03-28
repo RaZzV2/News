@@ -1,5 +1,6 @@
-package com.example.news.models.CountryCountModel;
+package com.example.news.models;
 
+import com.example.news.models.Bucket;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

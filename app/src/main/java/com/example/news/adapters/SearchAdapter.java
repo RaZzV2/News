@@ -1,4 +1,4 @@
-package com.example.news;
+package com.example.news.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -23,19 +23,21 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
+import com.example.news.R;
+import com.example.news.utils.Utils;
 import com.example.news.activities.WebViewActivity;
 import com.example.news.models.NewsModel.Article;
 import com.example.news.interfaces.OnItemClickListener;
 
 import java.util.List;
 
-public class Adapter extends RecyclerView.Adapter<Adapter.MyViewHolder> {
+public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHolder> {
 
     List<Article> articleList;
     Context context;
     OnItemClickListener onItemClickListener;
 
-    public Adapter(List<Article> articleList, Context context) {
+    public SearchAdapter(List<Article> articleList, Context context) {
         this.articleList = articleList;
         this.context = context;
     }

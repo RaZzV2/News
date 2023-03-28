@@ -1,4 +1,4 @@
-package com.example.news.models;
+package com.example.news.models.SearchLogModel;
 
 import android.annotation.SuppressLint;
 

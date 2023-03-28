@@ -3,7 +3,6 @@ package com.example.news.activities;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -15,15 +14,14 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.news.Adapter;
-import com.example.news.ApiClient;
-import com.example.news.ApiInterface;
+import com.example.news.adapters.SearchAdapter;
+import com.example.news.api.ApiClient;
+import com.example.news.api.ApiInterface;
 import com.example.news.R;
-import com.example.news.RealtimeDatabaseManager;
+import com.example.news.firebasemanager.RealtimeDatabaseManager;
 import com.example.news.models.NewsModel.Article;
 import com.example.news.models.NewsModel.News;
-import com.example.news.models.SearchLog;
-import com.google.firebase.analytics.FirebaseAnalytics;
+import com.example.news.models.SearchLogModel.SearchLog;
 
 import org.json.JSONObject;
 
@@ -31,7 +29,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -50,7 +47,7 @@ public class SearchActivity extends AppCompatActivity {
     private List<Article> articleList = new ArrayList<>();
 
     HashSet<String> stopWords;
-    Adapter adapter;
+    SearchAdapter searchAdapter;
 
     ImageView back;
 
@@ -69,9 +66,9 @@ public class SearchActivity extends AppCompatActivity {
                         articleList.clear();
                     }
                     articleList = response.body().getHits().getArticleList();
-                    adapter = new Adapter(articleList, SearchActivity.this);
-                    recyclerView.setAdapter(adapter);
-                    adapter.notifyDataSetChanged();
+                    searchAdapter = new SearchAdapter(articleList, SearchActivity.this);
+                    recyclerView.setAdapter(searchAdapter);
+                    searchAdapter.notifyDataSetChanged();
                 } else {
                     Toast.makeText(SearchActivity.this, "No result!", Toast.LENGTH_SHORT).show();
                 }
