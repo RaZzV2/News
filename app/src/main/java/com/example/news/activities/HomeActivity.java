@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -26,6 +27,8 @@ public class HomeActivity extends AppCompatActivity {
     DrawerLayout drawerLayout;
 
     RealtimeDatabaseManager realtimeDatabaseManager;
+
+    LinearLayout photoSearch;
 
     TextView searchBar;
 
@@ -83,6 +86,7 @@ public class HomeActivity extends AppCompatActivity {
         headerView = navigationView.getHeaderView(0);
         currentUsername = headerView.findViewById(R.id.usernameNavigation);
         profilePicture = headerView.findViewById(R.id.imageProfile);
+        photoSearch = findViewById(R.id.photoSearch);
 
         findViewById(R.id.menu).setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
 
@@ -131,6 +135,15 @@ public class HomeActivity extends AppCompatActivity {
 
             }
         });
+
+
+        photoSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(HomeActivity.this, ImageSenderActivity.class));
+            }
+        });
+
 
     }
 }

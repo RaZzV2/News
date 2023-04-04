@@ -10,6 +10,10 @@ public class Article {
      @Expose
      Source source;
 
+     @SerializedName("_score")
+     @Expose
+     double score;
+
      public Source getSource() {
           return source;
      }

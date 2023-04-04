@@ -2,14 +2,13 @@ package com.example.news.fragments;
 
 import android.graphics.Color;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 
 import com.example.news.R;
 import com.example.news.api.ApiClient;
@@ -17,9 +16,7 @@ import com.example.news.api.ApiInterface;
 import com.example.news.firebasemanager.RealtimeDatabaseManager;
 import com.example.news.models.Bucket;
 import com.example.news.models.CountryCountModel.CountryRequestBody;
-import com.example.news.models.SearchHistoryModel.Hit;
 import com.example.news.models.SearchHistoryModel.SearchHistory;
-import com.example.news.models.SearchHistoryModel.Source;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
@@ -37,10 +34,9 @@ import retrofit2.Response;
 public class MyStatisticsFragment extends Fragment {
 
     PieChart pieChart;
-
     RealtimeDatabaseManager realtimeDatabaseManager;
 
-    public void createPieChart() {
+    public void createPieChart(String time) {
         ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
         realtimeDatabaseManager = new RealtimeDatabaseManager();
         CountryRequestBody.Aggs.Types.Terms terms = new CountryRequestBody.Aggs.Types.Terms( "query.keyword");
@@ -48,7 +44,8 @@ public class MyStatisticsFragment extends Fragment {
         CountryRequestBody.Aggs aggs = new CountryRequestBody.Aggs(types);
         CountryRequestBody requestBody = new CountryRequestBody(aggs);
         realtimeDatabaseManager = new RealtimeDatabaseManager();
-        Call<SearchHistory> call = apiInterface.getSearchHistory(requestBody, realtimeDatabaseManager.getCurrentUserUid() + " AND date:[now-1h TO now]", 10000);
+//        Call<SearchHistory> call = apiInterface.getSearchHistory(requestBody, realtimeDatabaseManager.getCurrentUserUid() + " AND date:[now-1h TO now]", 10000);
+        Call<SearchHistory> call = apiInterface.getSearchHistory(requestBody, realtimeDatabaseManager.getCurrentUserUid() + " AND date:[now-"+time+" TO now]", 10000);
         call.enqueue(new Callback<SearchHistory>() {
             @Override
             public void onResponse(@NonNull Call<SearchHistory> call, @NonNull Response<SearchHistory> response) {
@@ -92,7 +89,12 @@ public class MyStatisticsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_my_statistics, container, false);
 
         pieChart = view.findViewById(R.id.chart);
-        createPieChart();
+//        calendarNews = view.findViewById(R.id.calendarNews);
+        createPieChart("1h");
+
+
+
+
 
         return view;
     }

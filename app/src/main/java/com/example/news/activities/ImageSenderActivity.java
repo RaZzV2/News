@@ -55,6 +55,8 @@ public class ImageSenderActivity extends AppCompatActivity {
 
             AuxiliarySend auxiliarySend = new AuxiliarySend();
             auxiliarySend.execute(base64String);
+
+
         });
     }
 }
