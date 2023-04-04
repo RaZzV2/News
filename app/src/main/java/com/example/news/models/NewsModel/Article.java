@@ -21,4 +21,12 @@ public class Article {
      public void setSource(Source source) {
           this.source = source;
      }
+
+     public double getScore() {
+          return score;
+     }
+
+     public void setScore(double score) {
+          this.score = score;
+     }
 }

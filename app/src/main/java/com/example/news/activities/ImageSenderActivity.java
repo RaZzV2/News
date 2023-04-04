@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
@@ -16,6 +17,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.news.AuxiliarySend;
 import com.example.news.R;
+import com.example.news.interfaces.OnTaskCompleteListener;
+import com.example.news.models.SearchByImageModel.ImageQuery;
 
 import java.io.ByteArrayOutputStream;
 
@@ -55,6 +58,21 @@ public class ImageSenderActivity extends AppCompatActivity {
 
             AuxiliarySend auxiliarySend = new AuxiliarySend();
             auxiliarySend.execute(base64String);
+
+            auxiliarySend.setOnTaskCompletedListener(new OnTaskCompleteListener.OnTaskCompletedListener<ImageQuery>() {
+                @Override
+                public void onTaskCompleted(ImageQuery result) {
+                    Intent intent = new Intent(ImageSenderActivity.this, SearchByImageActivity.class);
+                    intent.putExtra("imageQuery", result);
+                    startActivity(intent);
+                }
+
+                @Override
+                public void onError(Exception e) {
+
+                }
+            });
+
 
 
         });

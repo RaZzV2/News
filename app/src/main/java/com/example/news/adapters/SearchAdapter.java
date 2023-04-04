@@ -79,6 +79,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHold
                     }
                 }).transition(DrawableTransitionOptions.withCrossFade())
                 .into(holder.imageView);
+        holder.publishedAt.setText((int) (model.getScore()*100)+"%");
         holder.title.setText(model.getSource().getTitle());
         holder.description.setText(model.getSource().getDescription());
         holder.source.setText(model.getSource().getSourceSite().getName());

@@ -1,9 +1,14 @@
 package com.example.news.models.SearchByImageModel;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class ImageKnn {
+public class ImageKnn implements Parcelable {
 
     @SerializedName("field")
     @Expose
@@ -27,6 +32,25 @@ public class ImageKnn {
         this.k = k;
         this.numCandidates = numCandidates;
     }
+
+    protected ImageKnn(Parcel in) {
+        field = in.readString();
+        queryVector = in.createFloatArray();
+        k = in.readInt();
+        numCandidates = in.readInt();
+    }
+
+    public static final Creator<ImageKnn> CREATOR = new Creator<ImageKnn>() {
+        @Override
+        public ImageKnn createFromParcel(Parcel in) {
+            return new ImageKnn(in);
+        }
+
+        @Override
+        public ImageKnn[] newArray(int size) {
+            return new ImageKnn[size];
+        }
+    };
 
     public String getField() {
         return field;
@@ -58,5 +82,18 @@ public class ImageKnn {
 
     public void setNumCandidates(int numCandidates) {
         this.numCandidates = numCandidates;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeString(field);
+        dest.writeFloatArray(queryVector);
+        dest.writeInt(k);
+        dest.writeInt(numCandidates);
     }
 }

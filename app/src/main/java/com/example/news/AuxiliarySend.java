@@ -1,13 +1,8 @@
 package com.example.news;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
-import androidx.annotation.NonNull;
-
-import com.example.news.api.ApiClient;
-import com.example.news.api.ApiInterface;
-import com.example.news.models.NewsModel.News;
+import com.example.news.interfaces.OnTaskCompleteListener;
 import com.example.news.models.SearchByImageModel.ImageKnn;
 import com.example.news.models.SearchByImageModel.ImageQuery;
 
@@ -21,12 +16,17 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import retrofit2.Call;
-import retrofit2.Callback;
 
-public class AuxiliarySend extends AsyncTask<String, Void, String> {
+public class AuxiliarySend extends AsyncTask<String, Void, ImageQuery> {
+
+    private OnTaskCompleteListener.OnTaskCompletedListener<ImageQuery> onTaskCompletedListener;
+
+    public void setOnTaskCompletedListener(OnTaskCompleteListener.OnTaskCompletedListener<ImageQuery> listener) {
+        this.onTaskCompletedListener = listener;
+    }
+
     @Override
-    protected String doInBackground(String... strings) {
+    protected ImageQuery doInBackground(String... strings) {
         OkHttpClient client = new OkHttpClient();
         JSONObject json = new JSONObject();
         try {
@@ -54,7 +54,7 @@ public class AuxiliarySend extends AsyncTask<String, Void, String> {
             throw new RuntimeException(e);
         }
 
-        String responseBody = null;
+        String responseBody;
         try {
             assert response.body() != null;
             responseBody = response.body().string();
@@ -69,22 +69,14 @@ public class AuxiliarySend extends AsyncTask<String, Void, String> {
         }
 
         ImageKnn knn = new ImageKnn("featureVector", floatArray, 10, 100);
-        ImageQuery imageQuery = new ImageQuery(knn);
 
-        ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
-        Call<News> call = apiInterface.knnSearch(imageQuery);
-        call.enqueue(new Callback<News>() {
-            @Override
-            public void onResponse(@NonNull Call<News> call, @NonNull retrofit2.Response<News> response) {
-                Log.i("TAG", "test");
-            }
+        return new ImageQuery(knn);
+    }
 
-            @Override
-            public void onFailure(@NonNull Call<News> call, @NonNull Throwable t) {
-
-            }
-        });
-        assert response.body() != null;
-        return null;
+    @Override
+    protected void onPostExecute(ImageQuery result) {
+        if (onTaskCompletedListener != null) {
+            onTaskCompletedListener.onTaskCompleted(result);
+        }
     }
 }
