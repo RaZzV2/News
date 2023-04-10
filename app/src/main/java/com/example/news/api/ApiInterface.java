@@ -20,7 +20,9 @@ public interface ApiInterface {
 
     @GET("news_articles/_search")
     Call<News> getNews(
-            @Query("q") String country
+            @Query("q") String country,
+            @Query("from") int from,
+            @Query("size") int size
     );
 
     @POST("news_articles/_search?size=0")

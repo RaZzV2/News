@@ -44,22 +44,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <EditText
+        <androidx.appcompat.widget.SearchView
             android:id="@+id/searchBar"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:hint="@string/search_news"
-            android:textStyle="italic"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="30dp"
             android:layout_marginStart="30dp"
             android:background="@drawable/edittext_search_background"
-            android:drawablePadding="10dp"
             android:drawableStart="@drawable/search"
-            android:autofillHints="search"
-            android:textSize="16sp"/>
+            app:queryHint="Search here"
+            app:iconifiedByDefault="false" />
 
     </RelativeLayout>
 

@@ -34,16 +34,11 @@ public class AuxiliarySend extends AsyncTask<String, Void, ImageQuery> {
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
-        try {
-            json.put("im_b64_2", strings[0]);
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
         String jsonStr = json.toString();
         MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
         RequestBody requestBody = RequestBody.create(jsonStr,mediaType);
         Request request = new Request.Builder()
-                .url("http://192.168.0.104:5000/identify")
+                .url("http://newsproject.go.ro:5000/identify")
                 .post(requestBody)
                 .build();
 

@@ -24,6 +24,8 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.example.news.R;
+import com.example.news.activities.SearchActivity;
+import com.example.news.api.ApiInterface;
 import com.example.news.utils.Utils;
 import com.example.news.activities.WebViewActivity;
 import com.example.news.models.NewsModel.Article;
@@ -32,15 +34,24 @@ import com.example.news.interfaces.OnItemClickListener;
 import java.util.List;
 
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHolder> {
-
     List<Article> articleList;
     Context context;
     OnItemClickListener onItemClickListener;
+
+    SearchActivity searchActivity;
+
+
+    public SearchAdapter(List<Article> articleList, Context context, SearchActivity searchActivity) {
+        this.articleList = articleList;
+        this.context = context;
+        this.searchActivity=searchActivity;
+    }
 
     public SearchAdapter(List<Article> articleList, Context context) {
         this.articleList = articleList;
         this.context = context;
     }
+
 
     @NonNull
     @Override
@@ -79,7 +90,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHold
                     }
                 }).transition(DrawableTransitionOptions.withCrossFade())
                 .into(holder.imageView);
-        holder.publishedAt.setText((int) (model.getScore()*100)+"%");
+        holder.publishedAt.setText((int) (model.getScore() * 100) + "%");
         holder.title.setText(model.getSource().getTitle());
         holder.description.setText(model.getSource().getDescription());
         holder.source.setText(model.getSource().getSourceSite().getName());
@@ -95,14 +106,13 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHold
         return articleList.size();
     }
 
-    public void setOnItemClickListener(OnItemClickListener onItemClickListener){
-        this.onItemClickListener=onItemClickListener;
-    }
     public static class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView title, description, publishedAt, source, time, author;
         ImageView imageView;
         ProgressBar progressBar;
         OnItemClickListener onItemClickListener;
+
+
         public MyViewHolder(@NonNull View itemView, OnItemClickListener onItemClickListener) {
             super(itemView);
             title = itemView.findViewById(R.id.titleItem);
@@ -122,7 +132,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHold
             Context context = v.getContext();
             TextView title = v.findViewById(R.id.titleItem);
             String url = title.getTag().toString();
-            //onItemClickListener.onItemClick(v, getBindingAdapterPosition());
+            String titleContent = title.getText().toString();
+            // onItemClickListener.onItemClick(v, getBindingAdapterPosition());
             Intent intent = new Intent(v.getContext(), WebViewActivity.class);
             intent.putExtra("url", url);
             context.startActivity(intent);

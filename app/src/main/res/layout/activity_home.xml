@@ -69,17 +69,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginStart="32dp"
+                android:hint="Search here!"
+                android:background="@drawable/edittext_search_background"
+                app:drawableStartCompat="@drawable/search"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="32dp"
-                android:autofillHints="search"
-                android:background="@drawable/edittext_search_background"
                 android:drawablePadding="10dp"
-                android:ems="10"
-                android:gravity="left|center"
-                android:hint="@string/search_news"
-                android:textSize="16sp"
-                android:textStyle="italic"
-                app:drawableStartCompat="@drawable/search" />
+                app:iconifiedByDefault="false"
+                app:queryHint="Search here"
+                android:clickable="false"
+                android:gravity="left|center" />
 
 
             <LinearLayout

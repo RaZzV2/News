@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -90,6 +91,7 @@ public class HomeActivity extends AppCompatActivity {
 
         findViewById(R.id.menu).setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
 
+        searchBar.setOnClickListener(v -> startActivity(new Intent(HomeActivity.this, SearchActivity.class)));
 
         setCurrentUsername();
 
@@ -113,11 +115,6 @@ public class HomeActivity extends AppCompatActivity {
             return true;
         });
 
-
-        searchBar.setOnClickListener(v -> {
-            Intent intent = new Intent(HomeActivity.this, SearchActivity.class);
-            startActivity(intent);
-        });
 
 
         realtimeDatabaseManager.getCurrentUserReference().child("image").addValueEventListener(new ValueEventListener() {
