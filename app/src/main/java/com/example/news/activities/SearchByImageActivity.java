@@ -7,13 +7,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.example.news.R;
 import com.example.news.adapters.SearchAdapter;
 import com.example.news.api.ApiClient;
 import com.example.news.api.ApiInterface;
+import com.example.news.interfaces.OnItemClickListener;
 import com.example.news.models.NewsModel.Article;
 import com.example.news.models.NewsModel.News;
 import com.example.news.models.SearchByImageModel.ImageQuery;
@@ -23,7 +26,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 
-public class SearchByImageActivity extends AppCompatActivity {
+public class SearchByImageActivity extends AppCompatActivity implements OnItemClickListener {
 
     RecyclerView recyclerView;
 
@@ -54,7 +57,7 @@ public class SearchByImageActivity extends AppCompatActivity {
                 if(response.isSuccessful()) {
                     assert response.body() != null;
                     List<Article> articleList = response.body().getHits().getArticleList();
-                    searchAdapter = new SearchAdapter(articleList, SearchByImageActivity.this);
+                    searchAdapter = new SearchAdapter(articleList, SearchByImageActivity.this, SearchByImageActivity.this);
                     recyclerView.setAdapter(searchAdapter);
                     searchAdapter.notifyDataSetChanged();
                 }
@@ -65,5 +68,15 @@ public class SearchByImageActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        TextView title = findViewById(R.id.titleItem);
+        String url = title.getTag().toString();
+        String titleContent = title.getText().toString();
+        Intent intent = new Intent(getApplicationContext(), WebViewActivity.class);
+        intent.putExtra("url", url);
+        startActivity(intent);
     }
 }

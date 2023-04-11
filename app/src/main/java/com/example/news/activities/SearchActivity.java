@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,6 +21,7 @@ import com.example.news.api.ApiInterface;
 import com.example.news.datastream.LoadMoreNewsAsyncTask;
 import com.example.news.firebasemanager.RealtimeDatabaseManager;
 import com.example.news.interfaces.LoaderCallbackInterface;
+import com.example.news.interfaces.OnItemClickListener;
 import com.example.news.models.NewsModel.Article;
 import com.example.news.models.NewsModel.News;
 import com.example.news.models.SearchLogModel.SearchLog;
@@ -38,7 +41,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SearchActivity extends AppCompatActivity implements LoaderCallbackInterface {
+public class SearchActivity extends AppCompatActivity implements OnItemClickListener {
 
     RecyclerView recyclerView;
 
@@ -60,10 +63,9 @@ public class SearchActivity extends AppCompatActivity implements LoaderCallbackI
     SearchView searchBar;
 
     public void onLoadMoreComplete() {
-        currentPage +=1;
+        currentPage += 1;
     }
 
-    @Override
     public void loadJson(String title, int from, int size) {
         ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
         Call<News> call = apiInterface.getNews("title:" + title, from * size, size);
@@ -94,8 +96,8 @@ public class SearchActivity extends AppCompatActivity implements LoaderCallbackI
         realtimeDatabaseManager = new RealtimeDatabaseManager();
         String[] words = title.split(" ");
 
-        for(String word : words) {
-            if(!stopWords.contains(word)) {
+        for (String word : words) {
+            if (!stopWords.contains(word)) {
                 ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
                 SearchLog searchLog = new SearchLog();
                 searchLog.setUid(realtimeDatabaseManager.getCurrentUserUid());
@@ -157,7 +159,7 @@ public class SearchActivity extends AppCompatActivity implements LoaderCallbackI
                 currentPage = 0;
                 if (newText.equals(""))
                     newText = "*";
-                loadJson(newText, currentPage, size);
+                new LoadMoreNewsAsyncTask(SearchActivity.this, newText, currentPage, size).execute();
                 return true;
             }
         });
@@ -194,6 +196,17 @@ public class SearchActivity extends AppCompatActivity implements LoaderCallbackI
             Intent intent = new Intent(SearchActivity.this, HomeActivity.class);
             startActivity(intent);
         });
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        TextView title = findViewById(R.id.titleItem);
+        String url = title.getTag().toString();
+        String titleContent = title.getText().toString();
+        logSearch(titleContent);
+        Intent intent = new Intent(getApplicationContext(), WebViewActivity.class);
+        intent.putExtra("url", url);
+        startActivity(intent);
     }
 
 //    @Override

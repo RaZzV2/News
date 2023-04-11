@@ -2,7 +2,6 @@ package com.example.news.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,42 +23,31 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.example.news.R;
-import com.example.news.activities.SearchActivity;
-import com.example.news.api.ApiInterface;
-import com.example.news.utils.Utils;
-import com.example.news.activities.WebViewActivity;
-import com.example.news.models.NewsModel.Article;
 import com.example.news.interfaces.OnItemClickListener;
+import com.example.news.models.NewsModel.Article;
+import com.example.news.utils.Utils;
 
 import java.util.List;
 
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHolder> {
     List<Article> articleList;
-    Context context;
     OnItemClickListener onItemClickListener;
 
-    SearchActivity searchActivity;
+    Context context;
 
 
-    public SearchAdapter(List<Article> articleList, Context context, SearchActivity searchActivity) {
+    public SearchAdapter(List<Article> articleList, Context context, OnItemClickListener onItemClickListener) {
         this.articleList = articleList;
         this.context = context;
-        this.searchActivity=searchActivity;
+        this.onItemClickListener=onItemClickListener;
     }
-
-    public SearchAdapter(List<Article> articleList, Context context) {
-        this.articleList = articleList;
-        this.context = context;
-    }
-
 
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.news_item, parent, false);
-        MyViewHolder viewHolder = new MyViewHolder(view, onItemClickListener);
-        view.setOnClickListener(viewHolder);
-        return viewHolder;
+        //view.setOnClickListener(viewHolder);
+        return new MyViewHolder(view, onItemClickListener);
     }
 
     @SuppressLint({"CheckResult", "SetTextI18n"})
@@ -98,6 +86,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHold
         holder.author.setText(model.getSource().getAuthor());
         holder.title.setTag(model.getSource().getUrl());
 
+        holder.itemView.setOnClickListener(v -> onItemClickListener.onItemClick(position));
+
 
     }
 
@@ -106,7 +96,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHold
         return articleList.size();
     }
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
         TextView title, description, publishedAt, source, time, author;
         ImageView imageView;
         ProgressBar progressBar;
@@ -127,17 +117,16 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHold
             this.onItemClickListener = onItemClickListener;
         }
 
-        @Override
-        public void onClick(View v) {
-            Context context = v.getContext();
-            TextView title = v.findViewById(R.id.titleItem);
-            String url = title.getTag().toString();
-            String titleContent = title.getText().toString();
-            // onItemClickListener.onItemClick(v, getBindingAdapterPosition());
-            Intent intent = new Intent(v.getContext(), WebViewActivity.class);
-            intent.putExtra("url", url);
-            context.startActivity(intent);
-
-        }
+//        @Override
+//        public void onClick(View v) {
+//            Context context = v.getContext();
+//            TextView title = v.findViewById(R.id.titleItem);
+//            String url = title.getTag().toString();
+//            String titleContent = title.getText().toString();
+//            // onItemClickListener.onItemClick(v, getBindingAdapterPosition());
+//            Intent intent = new Intent(v.getContext(), WebViewActivity.class);
+//            intent.putExtra("url", url);
+//            context.startActivity(intent);
+//        }
     }
 }
