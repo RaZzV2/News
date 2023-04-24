@@ -22,6 +22,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -55,7 +56,14 @@ public class MainActivity extends AppCompatActivity {
                     } else if (!realtimeDatabaseManager.getCurrentUser().isEmailVerified() && realtimeDatabaseManager.getCurrentUser().getEmail() != null) {
                         startActivity(new Intent(getApplicationContext(), ConfirmEmailActivity.class));
                     } else {
+                        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task1 -> {
+                            if(task1.isSuccessful()){
+                                String token = task1.getResult();
+                                realtimeDatabaseManager.addTokenToCurrentUser(token);
+                            }
+                        });
                         startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+
                     }
                     finish();
                 }
@@ -74,6 +82,12 @@ public class MainActivity extends AppCompatActivity {
         realtimeDatabaseManager = new RealtimeDatabaseManager();
         realtimeDatabaseManager.login(emailContent, passwordContent, task -> {
             if (task.isSuccessful()) {
+                FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task1 -> {
+                    if(task1.isSuccessful()){
+                        String token = task1.getResult();
+                        realtimeDatabaseManager.addTokenToCurrentUser(token);
+                    }
+                });
                 secureAuthenticate();
             } else {
                 Toast.makeText(getApplicationContext(), "Wrong email or password!", Toast.LENGTH_SHORT).show();
@@ -94,10 +108,6 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "Email is not verified!", Toast.LENGTH_SHORT).show();
                 intent = new Intent(MainActivity.this, MainActivity.class);
             } else {
-                mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-                Bundle bundle = new Bundle();
-                bundle.putString(FirebaseAnalytics.Param.METHOD, "login");
-                mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, bundle);
                 intent = new Intent(MainActivity.this, HomeActivity.class);
             }
             startActivity(intent);

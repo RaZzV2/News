@@ -3,7 +3,6 @@ package com.example.news.api;
 import com.example.news.models.CountryCountModel.CountryRequestBody;
 import com.example.news.models.CountryCountModel.CountryResult;
 import com.example.news.models.NewsModel.News;
-import com.example.news.models.SearchByImageModel.ImageKnn;
 import com.example.news.models.SearchByImageModel.ImageQuery;
 import com.example.news.models.SearchHistoryModel.SearchHistory;
 import com.example.news.models.SearchLogModel.SearchLog;

@@ -5,8 +5,6 @@ import android.os.AsyncTask;
 import com.example.news.activities.SearchActivity;
 
 import java.lang.ref.WeakReference;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 public class LoadMoreNewsAsyncTask extends AsyncTask<Void, Void, Void> {
     private final WeakReference<SearchActivity> activityReference;
@@ -25,7 +23,7 @@ public class LoadMoreNewsAsyncTask extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... voids) {
         SearchActivity activity = activityReference.get();
         if (activity == null || activity.isFinishing()) return null;
-        activity.loadJson(query, currentPage, size);
+        activity.loadNews(query, currentPage, size);
         return null;
     }
 

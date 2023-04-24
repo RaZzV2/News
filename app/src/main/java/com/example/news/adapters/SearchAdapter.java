@@ -116,17 +116,5 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHold
 
             this.onItemClickListener = onItemClickListener;
         }
-
-//        @Override
-//        public void onClick(View v) {
-//            Context context = v.getContext();
-//            TextView title = v.findViewById(R.id.titleItem);
-//            String url = title.getTag().toString();
-//            String titleContent = title.getText().toString();
-//            // onItemClickListener.onItemClick(v, getBindingAdapterPosition());
-//            Intent intent = new Intent(v.getContext(), WebViewActivity.class);
-//            intent.putExtra("url", url);
-//            context.startActivity(intent);
-//        }
     }
 }

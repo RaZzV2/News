@@ -1,16 +1,15 @@
 package com.example.news.activities;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.os.Bundle;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.widget.TextView;
 
 import com.example.news.R;
 import com.example.news.adapters.SearchAdapter;
@@ -74,7 +73,7 @@ public class SearchByImageActivity extends AppCompatActivity implements OnItemCl
     public void onItemClick(int position) {
         TextView title = findViewById(R.id.titleItem);
         String url = title.getTag().toString();
-        String titleContent = title.getText().toString();
+        //String titleContent = title.getText().toString();
         Intent intent = new Intent(getApplicationContext(), WebViewActivity.class);
         intent.putExtra("url", url);
         startActivity(intent);

@@ -14,6 +14,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -114,6 +115,10 @@ public class RealtimeDatabaseManager {
 
     public void addImageToCurrentUser(String downloadURL) {
         getCurrentUserReference().child("image").setValue(downloadURL);
+    }
+
+    public void addTokenToCurrentUser(String token){
+        getCurrentUserReference().child("token").setValue(token);
     }
 
     public DatabaseReference getUsersReference() {

@@ -2,8 +2,6 @@ package com.example.news.api;
 
 import android.annotation.SuppressLint;
 
-import java.io.IOException;
-
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
@@ -12,15 +10,12 @@ import javax.net.ssl.X509TrustManager;
 import okhttp3.Authenticator;
 import okhttp3.Credentials;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import okhttp3.Route;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class ApiClient {
-    public static final String BASE_URL = "http://newsproject.go.ro:9200/";
+    public static final String BASE_URL = "http://192.168.0.104:9200/";
     public static Retrofit retrofit;
 
     public static Retrofit getApiClient() {

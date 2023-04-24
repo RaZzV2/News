@@ -5,17 +5,17 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.widget.Button;
 import android.widget.ImageView;
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.news.AuxiliarySend;
+import com.example.news.datastream.SendImageToServerAsyncTask;
 import com.example.news.R;
 import com.example.news.interfaces.OnTaskCompleteListener;
 import com.example.news.models.SearchByImageModel.ImageQuery;
@@ -56,10 +56,10 @@ public class ImageSenderActivity extends AppCompatActivity {
             byte[] byteArray = byteArrayOutputStream.toByteArray();
             String base64String = Base64.encodeToString(byteArray, Base64.DEFAULT);
 
-            AuxiliarySend auxiliarySend = new AuxiliarySend();
-            auxiliarySend.execute(base64String);
+            SendImageToServerAsyncTask sendImageToServerAsyncTask = new SendImageToServerAsyncTask();
+            sendImageToServerAsyncTask.execute(base64String);
 
-            auxiliarySend.setOnTaskCompletedListener(new OnTaskCompleteListener.OnTaskCompletedListener<ImageQuery>() {
+            sendImageToServerAsyncTask.setOnTaskCompletedListener(new OnTaskCompleteListener.OnTaskCompletedListener<ImageQuery>() {
                 @Override
                 public void onTaskCompleted(ImageQuery result) {
                     Intent intent = new Intent(ImageSenderActivity.this, SearchByImageActivity.class);

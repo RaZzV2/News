@@ -1,4 +1,4 @@
-package com.example.news;
+package com.example.news.datastream;
 
 import android.os.AsyncTask;
 
@@ -17,7 +17,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class AuxiliarySend extends AsyncTask<String, Void, ImageQuery> {
+public class SendImageToServerAsyncTask extends AsyncTask<String, Void, ImageQuery> {
 
     private OnTaskCompleteListener.OnTaskCompletedListener<ImageQuery> onTaskCompletedListener;
 
@@ -38,7 +38,7 @@ public class AuxiliarySend extends AsyncTask<String, Void, ImageQuery> {
         MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
         RequestBody requestBody = RequestBody.create(jsonStr,mediaType);
         Request request = new Request.Builder()
-                .url("http://newsproject.go.ro:5000/identify")
+                .url("http://192.168.0.104:5000/identify")
                 .post(requestBody)
                 .build();
 
