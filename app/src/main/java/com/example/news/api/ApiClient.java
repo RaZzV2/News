@@ -15,7 +15,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class ApiClient {
-    public static final String BASE_URL = "http://192.168.0.104:9200/";
+    public static final String BASE_URL = "http://newsproject.go.ro:9200/";
     public static Retrofit retrofit;
 
     public static Retrofit getApiClient() {

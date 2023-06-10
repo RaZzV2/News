@@ -56,7 +56,7 @@ public class ImageSenderActivity extends AppCompatActivity {
             byte[] byteArray = byteArrayOutputStream.toByteArray();
             String base64String = Base64.encodeToString(byteArray, Base64.DEFAULT);
 
-            SendImageToServerAsyncTask sendImageToServerAsyncTask = new SendImageToServerAsyncTask();
+            SendImageToServerAsyncTask sendImageToServerAsyncTask = new SendImageToServerAsyncTask(0,5);
             sendImageToServerAsyncTask.execute(base64String);
 
             sendImageToServerAsyncTask.setOnTaskCompletedListener(new OnTaskCompleteListener.OnTaskCompletedListener<ImageQuery>() {

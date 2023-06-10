@@ -15,8 +15,22 @@ public class ImageQuery implements Parcelable {
     @Expose
     ImageKnn imageKnn;
 
+    @SerializedName("from")
+    @Expose
+    int from;
+
+    @SerializedName("size")
+    @Expose
+    int size=10;
+
     public ImageQuery(ImageKnn imageKnn) {
         this.imageKnn = imageKnn;
+    }
+
+    public ImageQuery(ImageKnn imageKnn, int from, int size) {
+        this.imageKnn = imageKnn;
+        this.from = from;
+        this.size = size;
     }
 
     protected ImageQuery(Parcel in) {

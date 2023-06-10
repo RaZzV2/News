@@ -26,11 +26,4 @@ public class LoadMoreNewsAsyncTask extends AsyncTask<Void, Void, Void> {
         activity.loadNews(query, currentPage, size);
         return null;
     }
-
-    @Override
-    protected void onPostExecute(Void aVoid) {
-        SearchActivity activity = activityReference.get();
-        if (activity == null || activity.isFinishing()) return;
-        activity.onLoadMoreComplete();
-    }
 }

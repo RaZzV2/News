@@ -18,10 +18,13 @@ import com.example.news.adapters.SearchAdapter;
 import com.example.news.api.ApiClient;
 import com.example.news.api.ApiInterface;
 import com.example.news.datastream.LoadMoreNewsAsyncTask;
+import com.example.news.datastream.SendTitleToServerAsyncTask;
 import com.example.news.firebasemanager.RealtimeDatabaseManager;
 import com.example.news.interfaces.OnItemClickListener;
+import com.example.news.interfaces.OnTaskCompleteListener;
 import com.example.news.models.NewsModel.Article;
 import com.example.news.models.NewsModel.News;
+import com.example.news.models.SearchByImageModel.ImageQuery;
 import com.example.news.models.SearchLogModel.SearchLog;
 
 import org.json.JSONObject;
@@ -58,38 +61,46 @@ public class SearchActivity extends AppCompatActivity implements OnItemClickList
 
     SearchAdapter searchAdapter;
 
+    boolean isLoading = false;
+
     Executor executor;
 
     ImageView back;
 
     SearchView searchBar;
 
-    public void onLoadMoreComplete() {
-        currentPage += 1;
-    }
-
     public void loadNews(String title, int from, int size) {
-        ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
-        Call<News> call = apiInterface.getNews("title:" + title, from * size, size);
-
-        call.enqueue(new Callback<News>() {
-            @SuppressLint("NotifyDataSetChanged")
+        SendTitleToServerAsyncTask sendTitleToServerAsyncTask = new SendTitleToServerAsyncTask();
+        sendTitleToServerAsyncTask.setSize(size);
+        sendTitleToServerAsyncTask.setFrom(from*size);
+        sendTitleToServerAsyncTask.execute(title);
+        sendTitleToServerAsyncTask.setOnTaskCompletedListener(new OnTaskCompleteListener.OnTaskCompletedListener<ImageQuery>() {
             @Override
-            public void onResponse(@NonNull Call<News> call, @NonNull Response<News> response) {
-                if (response.isSuccessful() && Objects.requireNonNull(response.body()).getHits() != null) {
-                    if (!articleList.isEmpty()) {
-                        articleList.clear();
+            public void onTaskCompleted(ImageQuery result) {
+                ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
+                Call<News> call = apiInterface.knnSearch(result);
+
+                call.enqueue(new Callback<News>() {
+                    @SuppressLint("NotifyDataSetChanged")
+                    @Override
+                    public void onResponse(@NonNull Call<News> call, @NonNull Response<News> response) {
+                        if (response.isSuccessful() && Objects.requireNonNull(response.body()).getHits() != null) {
+                            articleList.addAll(response.body().getHits().getArticleList());
+                            searchAdapter.notifyDataSetChanged();
+                            currentPage++;
+                        }
+                        isLoading = false;
                     }
-                    articleList = response.body().getHits().getArticleList();
-                    searchAdapter = new SearchAdapter(articleList, SearchActivity.this, SearchActivity.this);
-                    recyclerView.setAdapter(searchAdapter);
-                    searchAdapter.notifyDataSetChanged();
-                }
+                    @Override
+                    public void onFailure(@NonNull Call<News> call, @NonNull Throwable t) {
+                        isLoading = false;
+                    }
+                });
             }
 
             @Override
-            public void onFailure(@NonNull Call<News> call, @NonNull Throwable t) {
-
+            public void onError(Exception e) {
+                isLoading = false;
             }
         });
     }
@@ -138,25 +149,23 @@ public class SearchActivity extends AppCompatActivity implements OnItemClickList
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setNestedScrollingEnabled(false);
         searchBar = findViewById(R.id.searchBar);
-
-        //new LoadMoreNewsAsyncTask(SearchActivity.this, "*", currentPage, size).execute();
-        LoadMoreNewsAsyncTask task = new LoadMoreNewsAsyncTask(SearchActivity.this, "*", currentPage, size);
-        task.executeOnExecutor(executor);
+        searchAdapter = new SearchAdapter(articleList, SearchActivity.this, SearchActivity.this);
+        recyclerView.setAdapter(searchAdapter);
 
         searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
+            public boolean onQueryTextSubmit(String newText) {
+                if(!isLoading) {
+                    currentPage = 0;
+                    articleList.clear();
+                    loadNews(newText, currentPage, size);
+                }
+                return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                currentPage = 0;
-                if (newText.equals(""))
-                    newText = "*";
-                LoadMoreNewsAsyncTask task = new LoadMoreNewsAsyncTask(SearchActivity.this, newText, currentPage, size);
-                task.executeOnExecutor(executor);
-                return true;
+                return false;
             }
         });
 
@@ -167,16 +176,14 @@ public class SearchActivity extends AppCompatActivity implements OnItemClickList
                 super.onScrolled(recyclerView, dx, dy);
                 layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
                 assert layoutManager != null;
-                int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
+                int visibleItemCount = layoutManager.getChildCount();
                 int totalItemCount = layoutManager.getItemCount();
-                if (lastVisibleItemPosition == totalItemCount - 1 && articleList.size() == size) {
-                    if (searchBar.getQuery().length() == 0) {
-                        LoadMoreNewsAsyncTask task = new LoadMoreNewsAsyncTask(SearchActivity.this, "*", currentPage, size);
-                        task.executeOnExecutor(executor);
-                    } else {
-                        LoadMoreNewsAsyncTask task = new LoadMoreNewsAsyncTask(SearchActivity.this, searchBar.getQuery().toString(), currentPage, size);
-                        task.executeOnExecutor(executor);
-                    }
+                int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
+
+                if (!isLoading && (visibleItemCount + firstVisibleItemPosition) >= totalItemCount
+                        && firstVisibleItemPosition >= 0) {
+                    isLoading = true;
+                    loadNews(searchBar.getQuery().toString(),currentPage,size);
                 }
             }
         });

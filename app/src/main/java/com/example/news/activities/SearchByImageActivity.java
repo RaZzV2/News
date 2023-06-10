@@ -15,15 +15,21 @@ import com.example.news.R;
 import com.example.news.adapters.SearchAdapter;
 import com.example.news.api.ApiClient;
 import com.example.news.api.ApiInterface;
+import com.example.news.datastream.SendImageToServerAsyncTask;
+import com.example.news.datastream.SendTitleToServerAsyncTask;
 import com.example.news.interfaces.OnItemClickListener;
+import com.example.news.interfaces.OnTaskCompleteListener;
 import com.example.news.models.NewsModel.Article;
 import com.example.news.models.NewsModel.News;
 import com.example.news.models.SearchByImageModel.ImageQuery;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SearchByImageActivity extends AppCompatActivity implements OnItemClickListener {
 
@@ -31,7 +37,15 @@ public class SearchByImageActivity extends AppCompatActivity implements OnItemCl
 
     ImageQuery imageQuery;
 
-    RecyclerView.LayoutManager layoutManager;
+    int currentPage = 0;
+
+    int size = 5;
+
+    List<Article> articleList = new ArrayList<>();
+
+    boolean isLoading = false;
+
+    LinearLayoutManager layoutManager;
 
     SearchAdapter searchAdapter;
 
@@ -46,34 +60,59 @@ public class SearchByImageActivity extends AppCompatActivity implements OnItemCl
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setNestedScrollingEnabled(false);
         imageQuery = getIntent().getParcelableExtra("imageQuery");
+        searchAdapter = new SearchAdapter(articleList, SearchByImageActivity.this, SearchByImageActivity.this);
+        recyclerView.setAdapter(searchAdapter);
+        loadNews(currentPage,size);
 
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                assert layoutManager != null;
+                int visibleItemCount = layoutManager.getChildCount();
+                int totalItemCount = layoutManager.getItemCount();
+                int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
+
+                if (!isLoading && (visibleItemCount + firstVisibleItemPosition) >= totalItemCount
+                        && firstVisibleItemPosition >= 0) {
+                    isLoading = true;
+                    loadNews(currentPage, size);
+                }
+            }
+        });
+    }
+
+
+    public void loadNews(int from, int size) {
         ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
-        Call<News> call = apiInterface.knnSearch(imageQuery);
+        Call<News> call = apiInterface.knnSearch(new ImageQuery(imageQuery.getImageKnn(),from,size));
         call.enqueue(new Callback<News>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onResponse(@NonNull Call<News> call, @NonNull retrofit2.Response<News> response) {
-                if(response.isSuccessful()) {
+                if (response.isSuccessful()) {
                     assert response.body() != null;
-                    List<Article> articleList = response.body().getHits().getArticleList();
-                    searchAdapter = new SearchAdapter(articleList, SearchByImageActivity.this, SearchByImageActivity.this);
-                    recyclerView.setAdapter(searchAdapter);
+                    articleList.addAll(response.body().getHits().getArticleList());
                     searchAdapter.notifyDataSetChanged();
+                    currentPage++;
                 }
+                isLoading = false;
             }
 
             @Override
             public void onFailure(@NonNull Call<News> call, @NonNull Throwable t) {
-
+                isLoading = false;
             }
         });
     }
+
 
     @Override
     public void onItemClick(int position) {
         TextView title = findViewById(R.id.titleItem);
         String url = title.getTag().toString();
-        //String titleContent = title.getText().toString();
         Intent intent = new Intent(getApplicationContext(), WebViewActivity.class);
         intent.putExtra("url", url);
         startActivity(intent);
