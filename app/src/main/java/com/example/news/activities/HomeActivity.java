@@ -62,6 +62,8 @@ public class HomeActivity extends AppCompatActivity {
 
     LinearLayout photoSearch;
 
+    TextView seeAll;
+
     List<Article> articleList = new ArrayList<>();
 
     TextView searchBar;
@@ -134,6 +136,13 @@ public class HomeActivity extends AppCompatActivity {
         shortCircleImageView1 = findViewById(R.id.shortNewsImageView1);
         shortNewsTitle1 = findViewById(R.id.shortNewsTitle1);
         shortNewsContent1 = findViewById(R.id.shortNewsContent1);
+
+        seeAll = findViewById(R.id.seeAll);
+
+        seeAll.setOnClickListener(v -> {
+            Intent intent = new Intent(HomeActivity.this, SeeAllActivity.class);
+            startActivity(intent);
+        });
 
         findViewById(R.id.menu).setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
 
