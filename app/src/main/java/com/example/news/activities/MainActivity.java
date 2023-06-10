@@ -13,9 +13,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.news.firebasemanager.RealtimeDatabaseManager;
 import com.example.news.R;
-import com.google.firebase.analytics.FirebaseAnalytics;
+import com.example.news.firebasemanager.RealtimeDatabaseManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -32,8 +31,6 @@ public class MainActivity extends AppCompatActivity {
     EditText email;
     EditText password;
     Button loginButton;
-
-    FirebaseAnalytics mFirebaseAnalytics;
 
     TextView newUser;
     FirebaseAuth firebaseAuth;

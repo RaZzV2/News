@@ -175,7 +175,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/top_news"
+                    android:text="Recommended News"
                     android:textColor="#26273a"
                     android:textSize="24sp"
                     android:textStyle="bold" />
@@ -220,8 +220,7 @@
                             android:id="@+id/shortNewsImageView1"
                             android:layout_width="60dp"
                             android:layout_height="60dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/avatar" />
+                            android:layout_gravity="center" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -232,7 +231,6 @@
                                 android:id="@+id/shortNewsTitle1"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Football"
                                 android:textAlignment="center"
                                 android:textStyle="bold" />
 
@@ -245,8 +243,7 @@
                                 <TextView
                                     android:id="@+id/shortNewsContent1"
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:text="Piturca a plecat de la nationala pentru ca nu stia ce sa facasi a mancat cacat la antrenament" />
+                                    android:layout_height="wrap_content" />
                             </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
@@ -282,8 +279,7 @@
                             android:id="@+id/shortNewsImageView2"
                             android:layout_width="60dp"
                             android:layout_height="60dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/avatar" />
+                            android:layout_gravity="center" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -294,7 +290,6 @@
                                 android:id="@+id/shortNewsTitle2"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Football"
                                 android:textAlignment="center"
                                 android:textStyle="bold" />
 
@@ -307,8 +302,7 @@
                                 <TextView
                                     android:id="@+id/shortNewsContent2"
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:text="Piturca a plecat de la nationala pentru ca nu stia ce sa facasi a mancat cacat la antrenament" />
+                                    android:layout_height="wrap_content" />
                             </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
@@ -344,8 +338,7 @@
                             android:id="@+id/shortNewsImageView3"
                             android:layout_width="60dp"
                             android:layout_height="60dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/avatar" />
+                            android:layout_gravity="center" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -356,7 +349,6 @@
                                 android:id="@+id/shortNewsTitle3"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Football"
                                 android:textAlignment="center"
                                 android:textStyle="bold" />
 
@@ -369,8 +361,7 @@
                                 <TextView
                                     android:id="@+id/shortNewsContent3"
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:text="Piturca a plecat de la nationala pentru ca nu stia ce sa facasi a mancat cacat la antrenament" />
+                                    android:layout_height="wrap_content" />
                             </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>

@@ -1,4 +1,4 @@
-package com.example.news.models;
+package com.example.news.models.SearchQuery;
 
 import com.google.gson.annotations.SerializedName;
 

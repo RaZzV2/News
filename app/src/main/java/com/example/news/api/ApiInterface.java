@@ -6,8 +6,8 @@ import com.example.news.models.NewsModel.News;
 import com.example.news.models.SearchByImageModel.ImageQuery;
 import com.example.news.models.SearchHistoryModel.SearchHistory;
 import com.example.news.models.SearchLogModel.SearchLog;
-import com.example.news.models.SearchQuery;
-import com.example.news.models.SearchResponse;
+import com.example.news.models.SearchQuery.SearchQuery;
+import com.example.news.models.SearchQuery.SearchResponse;
 
 import org.json.JSONObject;
 

@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -18,17 +17,17 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.news.R;
 import com.example.news.api.ApiClient;
 import com.example.news.api.ApiInterface;
 import com.example.news.datastream.SendTitleToServerAsyncTask;
 import com.example.news.firebasemanager.RealtimeDatabaseManager;
-import com.example.news.R;
 import com.example.news.interfaces.OnTaskCompleteListener;
 import com.example.news.models.NewsModel.Article;
 import com.example.news.models.NewsModel.News;
 import com.example.news.models.SearchByImageModel.ImageQuery;
-import com.example.news.models.SearchQuery;
-import com.example.news.models.SearchResponse;
+import com.example.news.models.SearchQuery.SearchQuery;
+import com.example.news.models.SearchQuery.SearchResponse;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -207,12 +206,13 @@ public class HomeActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     SearchResponse searchResponse = response.body();
                     assert searchResponse != null;
-                    getRecommendedArticles(searchResponse.getHits().getHits()[0].getSource().getQuery(), 0, 3);
+                    if (searchResponse.getHits().getHits().length != 0)
+                        getRecommendedArticles(searchResponse.getHits().getHits()[0].getSource().getQuery(), 0, 3);
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<SearchResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<SearchResponse> call, @NonNull Throwable t) {
             }
         });
     }
@@ -235,26 +235,28 @@ public class HomeActivity extends AppCompatActivity {
                         if (response.isSuccessful() && Objects.requireNonNull(response.body()).getHits() != null) {
                             articleList.addAll(response.body().getHits().getArticleList());
 
-                            Glide.with(HomeActivity.this)
-                                    .load(articleList.get(0).getSource().getUrlToImage())
-                                    .apply(RequestOptions.bitmapTransform(new CircleCrop()))
-                                    .into(shortCircleImageView1);
-                            shortNewsTitle1.setText(articleList.get(0).getSource().getTitle());
-                            shortNewsContent1.setText(articleList.get(0).getSource().getDescription());
+                            if (articleList.size() >= 3) {
+                                Glide.with(HomeActivity.this)
+                                        .load(articleList.get(0).getSource().getUrlToImage())
+                                        .apply(RequestOptions.bitmapTransform(new CircleCrop()))
+                                        .into(shortCircleImageView1);
+                                shortNewsTitle1.setText(articleList.get(0).getSource().getTitle());
+                                shortNewsContent1.setText(articleList.get(0).getSource().getDescription());
 
-                            Glide.with(HomeActivity.this)
-                                    .load(articleList.get(1).getSource().getUrlToImage())
-                                    .apply(RequestOptions.bitmapTransform(new CircleCrop()))
-                                    .into(shortCircleImageView2);
-                            shortNewsTitle2.setText(articleList.get(1).getSource().getTitle());
-                            shortNewsContent2.setText(articleList.get(1).getSource().getDescription());
+                                Glide.with(HomeActivity.this)
+                                        .load(articleList.get(1).getSource().getUrlToImage())
+                                        .apply(RequestOptions.bitmapTransform(new CircleCrop()))
+                                        .into(shortCircleImageView2);
+                                shortNewsTitle2.setText(articleList.get(1).getSource().getTitle());
+                                shortNewsContent2.setText(articleList.get(1).getSource().getDescription());
 
-                            Glide.with(HomeActivity.this)
-                                    .load(articleList.get(2).getSource().getUrlToImage())
-                                    .apply(RequestOptions.bitmapTransform(new CircleCrop()))
-                                    .into(shortCircleImageView3);
-                            shortNewsTitle3.setText(articleList.get(2).getSource().getTitle());
-                            shortNewsContent3.setText(articleList.get(2).getSource().getDescription());
+                                Glide.with(HomeActivity.this)
+                                        .load(articleList.get(2).getSource().getUrlToImage())
+                                        .apply(RequestOptions.bitmapTransform(new CircleCrop()))
+                                        .into(shortCircleImageView3);
+                                shortNewsTitle3.setText(articleList.get(2).getSource().getTitle());
+                                shortNewsContent3.setText(articleList.get(2).getSource().getDescription());
+                            }
                         }
                     }
 
