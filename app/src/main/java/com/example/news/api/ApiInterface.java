@@ -6,6 +6,8 @@ import com.example.news.models.NewsModel.News;
 import com.example.news.models.SearchByImageModel.ImageQuery;
 import com.example.news.models.SearchHistoryModel.SearchHistory;
 import com.example.news.models.SearchLogModel.SearchLog;
+import com.example.news.models.SearchQuery;
+import com.example.news.models.SearchResponse;
 
 import org.json.JSONObject;
 
@@ -38,5 +40,11 @@ public interface ApiInterface {
 
     @POST("news_articles/_search")
     Call<News> knnSearch(@Body ImageQuery body);
+
+    @POST("input_history/_doc")
+    Call<JSONObject> logInput(@Body SearchLog searchLog);
+
+    @POST("input_history/_search")
+    Call<SearchResponse> getRandomDocument(@Body SearchQuery searchQuery);
 
 }

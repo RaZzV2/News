@@ -87,7 +87,7 @@ public class SearchByImageActivity extends AppCompatActivity implements OnItemCl
 
     public void loadNews(int from, int size) {
         ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
-        Call<News> call = apiInterface.knnSearch(new ImageQuery(imageQuery.getImageKnn(),from,size));
+        Call<News> call = apiInterface.knnSearch(new ImageQuery(imageQuery.getImageKnn(),from*size,size));
         call.enqueue(new Callback<News>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
@@ -111,8 +111,8 @@ public class SearchByImageActivity extends AppCompatActivity implements OnItemCl
 
     @Override
     public void onItemClick(int position) {
-        TextView title = findViewById(R.id.titleItem);
-        String url = title.getTag().toString();
+        String url = articleList.get(position).getSource().getUrl();
+        String titleContent = articleList.get(position).getSource().getTitle();
         Intent intent = new Intent(getApplicationContext(), WebViewActivity.class);
         intent.putExtra("url", url);
         startActivity(intent);

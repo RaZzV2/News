@@ -3,6 +3,7 @@ package com.example.news.activities;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -72,7 +73,7 @@ public class SearchActivity extends AppCompatActivity implements OnItemClickList
     public void loadNews(String title, int from, int size) {
         SendTitleToServerAsyncTask sendTitleToServerAsyncTask = new SendTitleToServerAsyncTask();
         sendTitleToServerAsyncTask.setSize(size);
-        sendTitleToServerAsyncTask.setFrom(from*size);
+        sendTitleToServerAsyncTask.setFrom(from * size);
         sendTitleToServerAsyncTask.execute(title);
         sendTitleToServerAsyncTask.setOnTaskCompletedListener(new OnTaskCompleteListener.OnTaskCompletedListener<ImageQuery>() {
             @Override
@@ -91,6 +92,7 @@ public class SearchActivity extends AppCompatActivity implements OnItemClickList
                         }
                         isLoading = false;
                     }
+
                     @Override
                     public void onFailure(@NonNull Call<News> call, @NonNull Throwable t) {
                         isLoading = false;
@@ -137,6 +139,33 @@ public class SearchActivity extends AppCompatActivity implements OnItemClickList
         }
     }
 
+    void logInput(String title) {
+        RealtimeDatabaseManager realtimeDatabaseManager = new RealtimeDatabaseManager();
+        ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
+        SearchLog searchLog = new SearchLog();
+        searchLog.setUid(realtimeDatabaseManager.getCurrentUserUid());
+        searchLog.setQuery(title);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.UK);
+        String formattedDate = sdf.format(Calendar.getInstance().getTime());
+
+        searchLog.setDate(formattedDate);
+        Call<JSONObject> call = apiInterface.logInput(searchLog);
+
+        call.enqueue(new Callback<JSONObject>() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onResponse(@NonNull Call<JSONObject> call, @NonNull Response<JSONObject> response) {
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<JSONObject> call, @NonNull Throwable t) {
+            }
+        });
+    }
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -155,10 +184,11 @@ public class SearchActivity extends AppCompatActivity implements OnItemClickList
         searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String newText) {
-                if(!isLoading) {
+                if (!isLoading) {
                     currentPage = 0;
                     articleList.clear();
                     loadNews(newText, currentPage, size);
+                    logInput(newText);
                 }
                 return true;
             }
@@ -183,7 +213,7 @@ public class SearchActivity extends AppCompatActivity implements OnItemClickList
                 if (!isLoading && (visibleItemCount + firstVisibleItemPosition) >= totalItemCount
                         && firstVisibleItemPosition >= 0) {
                     isLoading = true;
-                    loadNews(searchBar.getQuery().toString(),currentPage,size);
+                    loadNews(searchBar.getQuery().toString(), currentPage, size);
                 }
             }
         });
@@ -202,9 +232,8 @@ public class SearchActivity extends AppCompatActivity implements OnItemClickList
 
     @Override
     public void onItemClick(int position) {
-        TextView title = findViewById(R.id.titleItem);
-        String url = title.getTag().toString();
-        String titleContent = title.getText().toString();
+        String url = articleList.get(position).getSource().getUrl();
+        String titleContent = articleList.get(position).getSource().getTitle();
         logSearch(titleContent);
         Intent intent = new Intent(getApplicationContext(), WebViewActivity.class);
         intent.putExtra("url", url);
