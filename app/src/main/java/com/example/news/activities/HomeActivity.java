@@ -167,6 +167,10 @@ public class HomeActivity extends AppCompatActivity {
                     startActivity(new Intent(this, AnalyticsActivity.class));
                     break;
 
+                case R.id.menuNotifications:
+                    startActivity(new Intent(this, NotificationActivity.class));
+                    break;
+
             }
             return true;
         });

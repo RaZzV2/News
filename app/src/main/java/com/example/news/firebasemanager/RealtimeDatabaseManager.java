@@ -8,13 +8,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.SignInMethodQueryResult;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -123,6 +121,14 @@ public class RealtimeDatabaseManager {
 
     public DatabaseReference getUsersReference() {
         return firebaseDatabase.getReference().child("users");
+    }
+
+    public DatabaseReference getCurrentUserToken() {
+        return firebaseDatabase.getReference().child("users").child(getCurrentUserUid()).child("token");
+    }
+
+    public DatabaseReference getHistoryReference(String token) {
+        return firebaseDatabase.getReference().child("notifications").child(token);
     }
 
     public DatabaseReference getCurrentUserConfirmedPhoneReference() {
