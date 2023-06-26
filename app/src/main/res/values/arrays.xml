@@ -3045,4 +3045,11 @@
         <item>être</item>
         <item>ô</item>
     </string-array>
+
+    <string-array name="time_options">
+        <item>Last 1h</item>
+        <item>Last 24h</item>
+        <item>Last 7 days</item>
+    </string-array>
+
 </resources>

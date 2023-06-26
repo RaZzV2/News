@@ -24,11 +24,19 @@ import com.example.news.interfaces.OnTaskCompleteListener;
 import com.example.news.models.NewsModel.Article;
 import com.example.news.models.NewsModel.News;
 import com.example.news.models.SearchByImageModel.ImageQuery;
+import com.example.news.models.SearchLogModel.SearchLog;
 import com.example.news.models.SearchQuery.SearchQuery;
 import com.example.news.models.SearchQuery.SearchResponse;
 
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import retrofit2.Call;
@@ -42,6 +50,8 @@ public class SeeAllActivity extends AppCompatActivity implements OnItemClickList
     LinearLayoutManager layoutManager;
 
     boolean isLoading = false;
+
+    HashSet<String> stopWords;
 
     RealtimeDatabaseManager realtimeDatabaseManager;
 
@@ -62,6 +72,7 @@ public class SeeAllActivity extends AppCompatActivity implements OnItemClickList
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setNestedScrollingEnabled(false);
+        stopWords = new HashSet<>(Arrays.asList(getResources().getStringArray(R.array.stop_words)));
         loadRecommendedNews();
         searchAdapter = new SearchAdapter(articleList, this, this);
         recyclerView.setAdapter(searchAdapter);
@@ -118,6 +129,38 @@ public class SeeAllActivity extends AppCompatActivity implements OnItemClickList
         });
     }
 
+    void logSearch(String title) {
+        realtimeDatabaseManager = new RealtimeDatabaseManager();
+        String[] words = title.split(" ");
+
+        for (String word : words) {
+            if (!stopWords.contains(word)) {
+                ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
+                SearchLog searchLog = new SearchLog();
+                searchLog.setUid(realtimeDatabaseManager.getCurrentUserUid());
+                searchLog.setQuery(word);
+
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.UK);
+                String formattedDate = sdf.format(Calendar.getInstance().getTime());
+
+                searchLog.setDate(formattedDate);
+                Call<JSONObject> call = apiInterface.logSearch(searchLog);
+
+                call.enqueue(new Callback<JSONObject>() {
+                    @SuppressLint("NotifyDataSetChanged")
+                    @Override
+                    public void onResponse(@NonNull Call<JSONObject> call, @NonNull Response<JSONObject> response) {
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<JSONObject> call, @NonNull Throwable t) {
+
+                    }
+                });
+            }
+        }
+    }
+
     public void getRecommendedArticles(String title, int from, int size) {
         SendTitleToServerAsyncTask sendTitleToServerAsyncTask = new SendTitleToServerAsyncTask();
         sendTitleToServerAsyncTask.setSize(size);
@@ -161,7 +204,7 @@ public class SeeAllActivity extends AppCompatActivity implements OnItemClickList
     public void onItemClick(int position) {
         String url = articleList.get(position).getSource().getUrl();
         String titleContent = articleList.get(position).getSource().getTitle();
-        //logSearch(titleContent);
+        logSearch(titleContent);
         Intent intent = new Intent(getApplicationContext(), WebViewActivity.class);
         intent.putExtra("url", url);
         startActivity(intent);

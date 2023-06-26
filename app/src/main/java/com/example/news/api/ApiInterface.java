@@ -2,6 +2,7 @@ package com.example.news.api;
 
 import com.example.news.models.CountryCountModel.CountryRequestBody;
 import com.example.news.models.CountryCountModel.CountryResult;
+import com.example.news.models.NewsCountModel.SearchRequest;
 import com.example.news.models.NewsModel.News;
 import com.example.news.models.SearchByImageModel.ImageQuery;
 import com.example.news.models.SearchHistoryModel.SearchHistory;
@@ -46,5 +47,8 @@ public interface ApiInterface {
 
     @POST("input_history/_search")
     Call<SearchResponse> getRandomDocument(@Body SearchQuery searchQuery);
+
+    @POST("input_history/_search")
+    Call<com.example.news.models.NewsCountModel.SearchResponse> search(@Body SearchRequest request);
 
 }

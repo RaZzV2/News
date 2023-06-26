@@ -6,12 +6,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 
 import com.example.news.R;
 import com.example.news.adapters.NotificationAdapter;
-import com.example.news.adapters.SearchAdapter;
 import com.example.news.classes.Notification;
 import com.example.news.firebasemanager.RealtimeDatabaseManager;
 import com.example.news.interfaces.OnItemClickListener;
@@ -36,7 +33,7 @@ public class NotificationActivity extends AppCompatActivity implements OnItemCli
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_history);
+        setContentView(R.layout.activity_notification);
         layoutManager = new LinearLayoutManager(NotificationActivity.this);
         notificationList = new ArrayList<>();
         recyclerView = findViewById(R.id.recyclerView);

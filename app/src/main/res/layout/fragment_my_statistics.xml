@@ -11,57 +11,25 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+            <Spinner
+                android:layout_marginTop="10dp"
+                android:id="@+id/spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:entries="@array/time_options"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginTop="20dp">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="test" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_gravity="center"
-                    android:background="@drawable/calendar" />
-
-                <TextView
-                    android:layout_marginTop="5dp"
-                    android:layout_marginStart="5dp"
-                    android:id="@+id/dateFrom"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:text="28/03/2022"
-                    android:textSize="15sp" />
-
-
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginStart="50dp"
-                    android:background="@drawable/calendar" />
-
-                <TextView
-                    android:id="@+id/dateTo"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:text="28/03/2022"
-                    android:textSize="15sp" />
-
-            </LinearLayout>
+                android:text="@string/predominant_words" />
 
 
             <com.github.mikephil.charting.charts.PieChart
@@ -70,6 +38,20 @@
                 android:layout_height="450dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Number of searches" />
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:layout_marginTop="10dp"
+                android:id="@+id/barChart"
+                android:layout_gravity="center"
+                android:layout_width="350dp"
+                android:layout_height="300dp" />
+
         </LinearLayout>
     </LinearLayout>
 

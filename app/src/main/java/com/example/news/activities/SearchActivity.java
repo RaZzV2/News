@@ -3,9 +3,7 @@ package com.example.news.activities;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,7 +16,6 @@ import com.example.news.R;
 import com.example.news.adapters.SearchAdapter;
 import com.example.news.api.ApiClient;
 import com.example.news.api.ApiInterface;
-import com.example.news.datastream.LoadMoreNewsAsyncTask;
 import com.example.news.datastream.SendTitleToServerAsyncTask;
 import com.example.news.firebasemanager.RealtimeDatabaseManager;
 import com.example.news.interfaces.OnItemClickListener;
@@ -239,5 +236,4 @@ public class SearchActivity extends AppCompatActivity implements OnItemClickList
         intent.putExtra("url", url);
         startActivity(intent);
     }
-
 }

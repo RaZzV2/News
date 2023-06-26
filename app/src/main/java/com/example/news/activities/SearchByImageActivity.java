@@ -17,14 +17,23 @@ import com.example.news.api.ApiClient;
 import com.example.news.api.ApiInterface;
 import com.example.news.datastream.SendImageToServerAsyncTask;
 import com.example.news.datastream.SendTitleToServerAsyncTask;
+import com.example.news.firebasemanager.RealtimeDatabaseManager;
 import com.example.news.interfaces.OnItemClickListener;
 import com.example.news.interfaces.OnTaskCompleteListener;
 import com.example.news.models.NewsModel.Article;
 import com.example.news.models.NewsModel.News;
 import com.example.news.models.SearchByImageModel.ImageQuery;
+import com.example.news.models.SearchLogModel.SearchLog;
 
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import retrofit2.Call;
@@ -36,6 +45,10 @@ public class SearchByImageActivity extends AppCompatActivity implements OnItemCl
     RecyclerView recyclerView;
 
     ImageQuery imageQuery;
+
+    HashSet<String> stopWords;
+
+    RealtimeDatabaseManager realtimeDatabaseManager;
 
     int currentPage = 0;
 
@@ -53,7 +66,7 @@ public class SearchByImageActivity extends AppCompatActivity implements OnItemCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_by_image);
-
+        stopWords = new HashSet<>(Arrays.asList(getResources().getStringArray(R.array.stop_words)));
         recyclerView = findViewById(R.id.searchByImageView);
         layoutManager = new LinearLayoutManager(SearchByImageActivity.this);
         recyclerView.setLayoutManager(layoutManager);
@@ -82,6 +95,38 @@ public class SearchByImageActivity extends AppCompatActivity implements OnItemCl
                 }
             }
         });
+    }
+
+    void logSearch(String title) {
+        realtimeDatabaseManager = new RealtimeDatabaseManager();
+        String[] words = title.split(" ");
+
+        for (String word : words) {
+            if (!stopWords.contains(word)) {
+                ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
+                SearchLog searchLog = new SearchLog();
+                searchLog.setUid(realtimeDatabaseManager.getCurrentUserUid());
+                searchLog.setQuery(word);
+
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.UK);
+                String formattedDate = sdf.format(Calendar.getInstance().getTime());
+
+                searchLog.setDate(formattedDate);
+                Call<JSONObject> call = apiInterface.logSearch(searchLog);
+
+                call.enqueue(new Callback<JSONObject>() {
+                    @SuppressLint("NotifyDataSetChanged")
+                    @Override
+                    public void onResponse(@NonNull Call<JSONObject> call, @NonNull Response<JSONObject> response) {
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<JSONObject> call, @NonNull Throwable t) {
+
+                    }
+                });
+            }
+        }
     }
 
 
@@ -113,6 +158,7 @@ public class SearchByImageActivity extends AppCompatActivity implements OnItemCl
     public void onItemClick(int position) {
         String url = articleList.get(position).getSource().getUrl();
         String titleContent = articleList.get(position).getSource().getTitle();
+        logSearch(titleContent);
         Intent intent = new Intent(getApplicationContext(), WebViewActivity.class);
         intent.putExtra("url", url);
         startActivity(intent);

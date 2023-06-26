@@ -20,6 +20,7 @@ import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
@@ -56,6 +57,13 @@ public class AllStatisticsFragment extends Fragment {
                     dataSet.setSliceSpace(3f);
                     dataSet.setSelectionShift(5f);
                     dataSet.setColors(ColorTemplate.VORDIPLOM_COLORS);
+
+                    dataSet.setValueFormatter(new ValueFormatter() {
+                        @Override
+                        public String getFormattedValue(float value) {
+                            return String.valueOf((int) value);
+                        }
+                    });
 
                     PieData data = new PieData(dataSet);
                     data.setValueTextSize(10f);
