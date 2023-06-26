@@ -291,10 +291,6 @@ public class ReceiveOtpActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        realtimeDatabaseManager = new RealtimeDatabaseManager();
-        realtimeDatabaseManager.reload();
-        resendOTP.setEnabled(false);
-        startTimer();
     }
 
     @Override
@@ -329,5 +325,11 @@ public class ReceiveOtpActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "The OTP code is not entered correctly", Toast.LENGTH_SHORT).show();
             }
         });
+
+        realtimeDatabaseManager = new RealtimeDatabaseManager();
+        realtimeDatabaseManager.reload();
+        resendOTP.setEnabled(false);
+        startTimer();
+
     }
 }

@@ -10,6 +10,7 @@ import android.provider.MediaStore;
 import android.util.Base64;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -50,30 +51,34 @@ public class ImageSenderActivity extends AppCompatActivity {
         });
 
         sendButton.setOnClickListener(v -> {
-            Bitmap bitmap = ((BitmapDrawable) currentPhoto.getDrawable()).getBitmap();
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-            byte[] byteArray = byteArrayOutputStream.toByteArray();
-            String base64String = Base64.encodeToString(byteArray, Base64.DEFAULT);
+            try {
+                Bitmap bitmap = ((BitmapDrawable) currentPhoto.getDrawable()).getBitmap();
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+                byte[] byteArray = byteArrayOutputStream.toByteArray();
+                String base64String = Base64.encodeToString(byteArray, Base64.DEFAULT);
 
-            SendImageToServerAsyncTask sendImageToServerAsyncTask = new SendImageToServerAsyncTask(0,5);
-            sendImageToServerAsyncTask.execute(base64String);
+                SendImageToServerAsyncTask sendImageToServerAsyncTask = new SendImageToServerAsyncTask(0, 5);
+                sendImageToServerAsyncTask.execute(base64String);
 
-            sendImageToServerAsyncTask.setOnTaskCompletedListener(new OnTaskCompleteListener.OnTaskCompletedListener<ImageQuery>() {
-                @Override
-                public void onTaskCompleted(ImageQuery result) {
-                    Intent intent = new Intent(ImageSenderActivity.this, SearchByImageActivity.class);
-                    intent.putExtra("imageQuery", result);
-                    startActivity(intent);
-                }
+                sendImageToServerAsyncTask.setOnTaskCompletedListener(new OnTaskCompleteListener.OnTaskCompletedListener<ImageQuery>() {
+                    @Override
+                    public void onTaskCompleted(ImageQuery result) {
+                        Intent intent = new Intent(ImageSenderActivity.this, SearchByImageActivity.class);
+                        intent.putExtra("imageQuery", result);
+                        startActivity(intent);
+                    }
 
-                @Override
-                public void onError(Exception e) {
+                    @Override
+                    public void onError(Exception e) {
 
-                }
-            });
+                    }
+                });
 
-
+            }
+            catch(Exception e) {
+                Toast.makeText(this, "This image corrupted or it doesn't exist!", Toast.LENGTH_SHORT).show();
+            }
 
         });
     }
