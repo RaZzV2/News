@@ -69,6 +69,7 @@ public class MyStatisticsFragment extends Fragment {
     BarChart barChart;
     RealtimeDatabaseManager realtimeDatabaseManager;
     Spinner timeSpinner;
+    Spinner secondTimeSpinner;
 
     public void createPieChart(String time) {
         ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
@@ -198,14 +199,38 @@ public class MyStatisticsFragment extends Fragment {
         createPieChart("1h");
         createBarChart("7");
         timeSpinner = view.findViewById(R.id.spinner);
+        secondTimeSpinner = view.findViewById(R.id.spinner2);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(view.getContext(), R.array.time_options, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> secondAdapter = ArrayAdapter.createFromResource(view.getContext(), R.array.fulltime_options, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        secondAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         timeSpinner.setAdapter(adapter);
+        secondTimeSpinner.setAdapter(secondAdapter);
+
+
+        secondTimeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedOption = parent.getItemAtPosition(position).toString();
+
+                if ("Last 30 days".equals(selectedOption)) {
+                    createBarChart("30");
+                } else {
+                    createBarChart("7");
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
         timeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedOption = parent.getItemAtPosition(position).toString();
-                Toast.makeText(view.getContext(), "Selected option: " + selectedOption, Toast.LENGTH_SHORT).show();
 
                 switch (selectedOption) {
                     case "Last 24h":
