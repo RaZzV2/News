@@ -49,6 +49,26 @@
                 android:layout_marginEnd="10dp" />
         </LinearLayout>
 
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/number_of_searches"
+                android:gravity="center" />
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:layout_marginTop="10dp"
+                android:id="@+id/barChart"
+                android:layout_gravity="center"
+                android:layout_width="350dp"
+                android:layout_height="300dp" />
+        </LinearLayout>
+
     </LinearLayout>
 
 </ScrollView>

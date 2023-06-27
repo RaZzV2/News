@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ImageView;
 
 import com.example.news.R;
 import com.example.news.adapters.NotificationAdapter;
@@ -30,6 +32,8 @@ public class NotificationActivity extends AppCompatActivity implements OnItemCli
 
     List<Notification> notificationList;
 
+    ImageView back;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +43,13 @@ public class NotificationActivity extends AppCompatActivity implements OnItemCli
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(layoutManager);
         notificationAdapter = new NotificationAdapter(notificationList, NotificationActivity.this, this);
+        back = findViewById(R.id.menu);
+
+        back.setOnClickListener(v -> {
+            Intent intent = new Intent(NotificationActivity.this, HomeActivity.class);
+            startActivity(intent);
+            finish();
+        });
 
         RealtimeDatabaseManager realtimeDatabaseManager = new RealtimeDatabaseManager();
         realtimeDatabaseManager.getCurrentUserToken().addValueEventListener(new ValueEventListener() {

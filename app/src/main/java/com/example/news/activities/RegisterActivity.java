@@ -29,7 +29,6 @@ public class RegisterActivity extends AppCompatActivity {
     EditText email;
     EditText username;
     EditText password;
-    EditText phone_number;
     Button registerButton;
 
     TextView alreadyHaveAnAccount;
@@ -100,7 +99,6 @@ public class RegisterActivity extends AppCompatActivity {
         username = findViewById(R.id.username);
         password = findViewById(R.id.password);
         registerButton = findViewById(R.id.register_button);
-        phone_number = findViewById(R.id.phone_number);
         alreadyHaveAnAccount = findViewById(R.id.alreadyHaveAnAccount);
 
         registerButton.setOnClickListener(v -> {

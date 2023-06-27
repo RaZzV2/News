@@ -28,12 +28,6 @@
             </group>
 
             <group android:checkableBehavior="single">
-                <item android:id="@+id/menuHistory"
-                    android:icon="@drawable/history"
-                    android:title="@string/history" />
-            </group>
-
-            <group android:checkableBehavior="single">
                 <item android:id="@+id/menuLogout"
                     android:icon="@drawable/logout"
                     android:title="@string/log_out" />

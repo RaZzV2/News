@@ -106,7 +106,7 @@ public class MyStatisticsFragment extends Fragment {
 
                     pieChart.setData(data);
 
-                    pieChart.setCenterText("News Countries Chart");
+                    pieChart.setCenterText("Predominant Words Chart");
                     pieChart.setCenterTextSize(16f);
                     pieChart.getLegend().setEnabled(false);
                     pieChart.getDescription().setEnabled(false);
@@ -159,6 +159,13 @@ public class MyStatisticsFragment extends Fragment {
 
                     dataSet.setColor(Color.BLUE);
 
+                    dataSet.setValueFormatter(new ValueFormatter() {
+                        @Override
+                        public String getFormattedValue(float value) {
+                            return String.valueOf((int) value);
+                        }
+                    });
+
                     BarData barData = new BarData(dataSet);
 
                     XAxis xAxis = barChart.getXAxis();
@@ -167,6 +174,7 @@ public class MyStatisticsFragment extends Fragment {
                     xAxis.setGranularity(1);
                     xAxis.setGranularityEnabled(true);
                     barChart.getDescription().setEnabled(false);
+
                     barChart.setData(barData);
                     barChart.invalidate();
                 }
