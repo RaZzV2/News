@@ -233,14 +233,14 @@ public class MyStatisticsFragment extends Fragment {
                 String selectedOption = parent.getItemAtPosition(position).toString();
 
                 switch (selectedOption) {
-                    case "Last 24h":
+                    case "Last 24 hours":
                         createPieChart("1d");
                         break;
-                    case "Last 7 days":
-                        createPieChart("7d");
+                    case "Last 1 hour":
+                        createPieChart("1h");
                         break;
                     default:
-                        createPieChart("1h");
+                        createPieChart("7d");
                         break;
                 }
             }

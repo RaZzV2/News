@@ -55,10 +55,19 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <Spinner
+                android:layout_marginTop="10dp"
+                android:id="@+id/spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:entries="@array/time_options"/>
+
             <TextView
+                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/number_of_searches"
+                android:text="Number of total searches"
                 android:gravity="center" />
 
             <com.github.mikephil.charting.charts.BarChart

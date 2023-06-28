@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -61,6 +64,8 @@ public class AllStatisticsFragment extends Fragment {
     BarChart barChart;
 
     RealtimeDatabaseManager realtimeDatabaseManager;
+
+    Spinner timeSpinner;
 
     public void createBarChart(String time) {
         ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
@@ -184,10 +189,31 @@ public class AllStatisticsFragment extends Fragment {
         languageNews = view.findViewById(R.id.chart);
         categoriesNews = view.findViewById(R.id.chart1);
         barChart = view.findViewById(R.id.barChart);
+        timeSpinner = view.findViewById(R.id.spinner);
+        ArrayAdapter<CharSequence> secondAdapter = ArrayAdapter.createFromResource(view.getContext(), R.array.fulltime_options, android.R.layout.simple_spinner_item);
+        secondAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        timeSpinner.setAdapter(secondAdapter);
 
         createPieChart("country", languageNews, "News Languages Chart");
         createPieChart("category", categoriesNews, "News Categories Chart");
         createBarChart("7");
+
+        timeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedOption = parent.getItemAtPosition(position).toString();
+                if ("Last 30 days".equals(selectedOption)) {
+                    createBarChart("30");
+                } else {
+                    createBarChart("7");
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
 
         return view;

@@ -3047,13 +3047,13 @@
     </string-array>
 
     <string-array name="time_options">
-        <item>Last 1 hour</item>
-        <item>Last 24 hour</item>
         <item>Last 7 days</item>
+        <item>Last 24 hours</item>
+        <item>Last 1 hour</item>
     </string-array>
 
     <string-array name="fulltime_options">
-        <item>Last 7 day</item>
+        <item>Last 7 days</item>
         <item>Last 30 days</item>
     </string-array>
 
