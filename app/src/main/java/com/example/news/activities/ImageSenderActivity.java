@@ -72,9 +72,14 @@ public class ImageSenderActivity extends AppCompatActivity {
                 sendImageToServerAsyncTask.setOnTaskCompletedListener(new OnTaskCompleteListener.OnTaskCompletedListener<ImageQuery>() {
                     @Override
                     public void onTaskCompleted(ImageQuery result) {
-                        Intent intent = new Intent(ImageSenderActivity.this, SearchByImageActivity.class);
-                        intent.putExtra("imageQuery", result);
-                        startActivity(intent);
+                        if(result != null) {
+                            Intent intent = new Intent(ImageSenderActivity.this, SearchByImageActivity.class);
+                            intent.putExtra("imageQuery", result);
+                            startActivity(intent);
+                        }
+                        else {
+                            Toast.makeText(ImageSenderActivity.this, "This image is corrupted or it doesn't exist!", Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     @Override
@@ -85,7 +90,7 @@ public class ImageSenderActivity extends AppCompatActivity {
 
             }
             catch(Exception e) {
-                Toast.makeText(this, "This image corrupted or it doesn't exist!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "This image is corrupted or it doesn't exist!", Toast.LENGTH_SHORT).show();
             }
 
         });

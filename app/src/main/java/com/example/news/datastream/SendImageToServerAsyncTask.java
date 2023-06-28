@@ -64,12 +64,16 @@ public class SendImageToServerAsyncTask extends AsyncTask<String, Void, ImageQue
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        
         String[] stringValues = responseBody.replaceAll("[\\[\\]]", "").split(",");
         float[] floatArray = new float[stringValues.length];
 
-        for (int i = 0; i < stringValues.length; i++) {
-            floatArray[i] = Float.parseFloat(stringValues[i]);
+        try {
+            for (int i = 0; i < stringValues.length; i++) {
+                floatArray[i] = Float.parseFloat(stringValues[i]);
+            }
+        }
+        catch (Exception ignored) {
+            return null;
         }
 
         ImageKnn knn = new ImageKnn("featureVector", floatArray, 100, 100);
