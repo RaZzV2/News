@@ -16,7 +16,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="#D5BDAF"
+            android:background="#252422"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
             <ImageView
@@ -30,6 +30,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="NOTIFICATIONS"
+                android:textColor="#FFFCF2"
                 android:textStyle="bold"/>
 
         </androidx.appcompat.widget.Toolbar>

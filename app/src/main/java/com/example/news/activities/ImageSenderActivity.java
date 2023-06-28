@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -27,6 +28,7 @@ public class ImageSenderActivity extends AppCompatActivity {
 
     private ImageView currentPhoto;
     private ActivityResultLauncher<Intent> imagePickerLauncher;
+    ImageView back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +36,12 @@ public class ImageSenderActivity extends AppCompatActivity {
         setContentView(R.layout.activity_image_sender);
         currentPhoto = findViewById(R.id.searchByImageView);
         Button sendButton = findViewById(R.id.sendButton);
+        back = findViewById(R.id.back);
+
+        back.setOnClickListener(v -> {
+            startActivity(new Intent(ImageSenderActivity.this, HomeActivity.class));
+            finish();
+        });
 
         imagePickerLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 result -> {

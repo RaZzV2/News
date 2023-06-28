@@ -80,6 +80,9 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHold
                     }
                 }).transition(DrawableTransitionOptions.withCrossFade())
                 .into(holder.imageView);
+        int red = (int) (255 * (1.55 - model.getScore()));
+        int green = (int) (255 * 0.9 * model.getScore());
+        holder.publishedAt.setTextColor(Color.rgb(red,green,0));
         holder.publishedAt.setText((int) (model.getScore() * 100) + "%");
         holder.title.setText(model.getSource().getTitle());
         holder.description.setText(model.getSource().getDescription());

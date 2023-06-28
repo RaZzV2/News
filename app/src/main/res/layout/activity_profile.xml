@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFCF2"
     tools:context=".activities.ProfileActivity">
 
     <LinearLayout
@@ -15,7 +16,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="#D5BDAF"
+        android:background="#252422"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -31,6 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:textColor="#FFFCF2"
             android:text="@string/edit_profile"
             android:textStyle="bold" />
     </androidx.appcompat.widget.Toolbar>

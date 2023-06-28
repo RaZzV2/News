@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
+    android:background="#FFFCF2"
     tools:context=".activities.ConfirmEmailActivity">
 
     <LinearLayout
@@ -49,7 +49,7 @@
             android:background="@drawable/button_curve"
             android:gravity="center"
             android:backgroundTint="@null"
-            android:textColor="#FFFFFF"
+            android:textColor="#252422"
             android:text="@string/verify_email"
             />
 

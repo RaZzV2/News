@@ -17,6 +17,7 @@
         
         <RelativeLayout
             android:layout_width="match_parent"
+            android:background="#FFFCF2"
             android:layout_height="wrap_content">
 
             <ImageView
@@ -84,7 +85,7 @@
                     android:layout_marginStart="27dp"
                     android:layout_marginEnd="10dp"
                     android:text="@string/date"
-                    android:textColor="#606060" />
+                    android:textColor="#EA754A" />
 
             </FrameLayout>
             

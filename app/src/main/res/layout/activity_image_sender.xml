@@ -4,17 +4,49 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
+    android:background="#FFFCF2"
     tools:context=".activities.ImageSenderActivity">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:background="#252422"
+                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+                    <ImageView
+                        android:id="@+id/back"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/back" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="SEARCH BY IMAGE"
+                        android:textColor="#FFFCF2"
+                        android:textStyle="bold"/>
+
+                </androidx.appcompat.widget.Toolbar>
+
+            </LinearLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -27,7 +59,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:textStyle="bold"
-                    android:textColor="#FFFFFF"
+                    android:textColor="#EB5E28"
                     android:text="@string/search_by_image"
                     android:textSize="40sp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -48,7 +80,7 @@
                     android:layout_gravity="center"
                     android:layout_width="350dp"
                     android:layout_height="350dp"
-                    app:srcCompat="@drawable/ic_launcher_background" />
+                    app:srcCompat="@drawable/picture1" />
 
             </LinearLayout>
 
@@ -57,13 +89,13 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <com.google.android.material.button.MaterialButton
+                <androidx.appcompat.widget.AppCompatButton
                     android:layout_marginTop="40dp"
                     android:id="@+id/sendButton"
                     android:layout_width="200dp"
                     android:layout_height="50dp"
                     android:layout_gravity="center"
-                    android:textColor="#ffffff"
+                    android:textColor="#252422"
                     android:text="@string/search"
                     android:background="@drawable/button_curve"/>
             </LinearLayout>

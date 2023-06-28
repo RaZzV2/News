@@ -64,6 +64,7 @@ public class SendImageToServerAsyncTask extends AsyncTask<String, Void, ImageQue
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        
         String[] stringValues = responseBody.replaceAll("[\\[\\]]", "").split(",");
         float[] floatArray = new float[stringValues.length];
 

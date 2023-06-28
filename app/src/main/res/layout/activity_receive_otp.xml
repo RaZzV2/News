@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:scrollbars="none"
     android:overScrollMode="never"
-    android:background="@drawable/background"
+    android:background="#FFFCF2"
     tools:context=".activities.SendOtpActivity">
 
     <LinearLayout
@@ -159,7 +159,7 @@
             android:layout_margin="30dp"
             android:background="@drawable/button_curve"
             android:backgroundTint="@null"
-            android:textColor="#FFFFFF"
+            android:textColor="#252422"
             android:text="@string/verify"
             />
 
