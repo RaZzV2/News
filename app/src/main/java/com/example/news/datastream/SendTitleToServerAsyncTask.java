@@ -55,7 +55,7 @@ public class SendTitleToServerAsyncTask extends AsyncTask<String, Void, ImageQue
         MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
         RequestBody requestBody = RequestBody.create(jsonStr,mediaType);
         Request request = new Request.Builder()
-                .url("http://192.168.0.102:7000/text_identify")
+                .url("http://192.168.196.1:7000/text_identify")
                 .post(requestBody)
                 .build();
 
